@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.weatherapp.screens.alarms.AlarmsScreen
@@ -109,10 +110,10 @@ fun BottomNavigationBar(navController: NavHostController) {
                     }
                 },
                 icon = {
-                    Icon(imageVector = navItem.icon, contentDescription = navItem.label)
+                    Icon(imageVector = navItem.icon, contentDescription = stringResource(navItem.label))
                 },
                 label = {
-                    Text(text = navItem.label)
+                    Text(text = stringResource(navItem.label))
                 },
                 alwaysShowLabel = false,
                 colors = NavigationBarItemDefaults.colors(

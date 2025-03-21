@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="home_label">Home</string>
+    <string name="favorite_label">Favorites</string>
+    <string name="alarms_label">Alarms</string>
+    <string name="settings_label">Settings</string>
+    <string name="language_item">Language Icon</string>
+    <string name="language">Language</string>
+    <string name="temp_unit">Temperature Unit</string>
+    <string name="location">Location</string>
+    <string name="wind_unit">Wind Speed Unit</string>
+    <string name="arabic">Arabic</string>
+    <string name="english">English</string>
+    <string name="system_default">Default</string>
+    <string name="celsius">Celsius °C</string>
+    <string name="kelvin">Kelvin °K</string>
+    <string name="fahrenheit">Fahrenheit °F</string>
+    <string name="gps">GPS</string>
+    <string name="map">Map</string>
+    <string name="mps">Meter/Second</string>
+    <string name="mph">Mile/Hour</string>
+
 </resources>
