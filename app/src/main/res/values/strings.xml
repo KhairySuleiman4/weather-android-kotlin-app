@@ -19,5 +19,6 @@
     <string name="map">Map</string>
     <string name="mps">Meter/Second</string>
     <string name="mph">Mile/Hour</string>
+    <string name="save_settings">Save Settings</string>
 
 </resources>
