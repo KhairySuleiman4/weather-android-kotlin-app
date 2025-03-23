@@ -10,12 +10,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.weatherapp.model.repos.AppRepoImp
+import com.example.weatherapp.model.repos.settings.SettingsRepoImp
+import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.screens.alarms.AlarmsScreen
 import com.example.weatherapp.screens.favorite.FavoriteScreen
 import com.example.weatherapp.screens.home.HomeScreen
+import com.example.weatherapp.screens.settings.SettingsFactory
 import com.example.weatherapp.screens.settings.SettingsScreen
 import com.example.weatherapp.ui.theme.Primary
 
@@ -43,6 +49,7 @@ fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues
 ) {
+    val context = LocalContext.current
     NavHost(
         navController = navController,
         startDestination = "home",
@@ -58,7 +65,17 @@ fun NavHostContainer(
             AlarmsScreen()
         }
         composable("settings") {
-            SettingsScreen()
+            SettingsScreen(
+                viewModel(
+                    factory = SettingsFactory(
+                        AppRepoImp.getInstance(
+                            SettingsRepoImp.getInstance(
+                                SettingsHelper(context)
+                            )
+                        )
+                    )
+                )
+            )
         }
     }
 }

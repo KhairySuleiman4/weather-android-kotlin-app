@@ -23,24 +23,40 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.OnPrimary
 import com.example.weatherapp.ui.theme.Primary
 
-@Preview
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(viewModel: SettingsViewModel) {
+
+    LaunchedEffect(Unit) {
+        viewModel.getSavedSettings()
+    }
+
+    val savedLanguage by viewModel.language.collectAsState()
+    val savedTemp by viewModel.temp.collectAsState()
+    val savedLocation by viewModel.location.collectAsState()
+    val savedWind by viewModel.wind.collectAsState()
+
+    var selectedLanguage by remember(savedLanguage) { mutableStateOf(savedLanguage) }
+    var selectedTempUnit by remember(savedTemp) { mutableStateOf(savedTemp) }
+    var selectedLocation by remember(savedLocation) { mutableStateOf(savedLocation) }
+    var selectedWindSpeedUnit by remember(savedWind) { mutableStateOf(savedWind) }
+
     val kelvin = stringResource(R.string.kelvin)
     val celsius = stringResource(R.string.celsius)
     val fahrenheit = stringResource(R.string.fahrenheit)
@@ -50,18 +66,13 @@ fun SettingsScreen() {
     val map = stringResource(R.string.map)
     val english = stringResource(R.string.english)
     val arabic = stringResource(R.string.arabic)
-    val systemDefault = stringResource(R.string.system_default)
 
-    val langOptions = listOf(english, arabic, systemDefault)
+    val langOptions = listOf(english, arabic)
     val tempOptions = listOf(kelvin, celsius, fahrenheit)
     val locationOptions = listOf(gps, map)
 
-    val selectedLanguage = remember { mutableStateOf(english) }
-    val selectedTempUnit = remember { mutableStateOf(kelvin) }
-    val selectedLocation = remember { mutableStateOf(gps) }
-
-    val selectedWindSpeedUnit by remember(selectedTempUnit.value) {
-        mutableStateOf(if (selectedTempUnit.value == fahrenheit) mph else mps)
+    LaunchedEffect(selectedTempUnit) {
+        selectedWindSpeedUnit = if (selectedTempUnit == fahrenheit) mph else mps
     }
 
     Box(
@@ -95,8 +106,8 @@ fun SettingsScreen() {
                         R.drawable.language,
                         R.string.language,
                         langOptions,
-                        selectedOption = selectedLanguage.value,
-                        onOptionSelected = { selectedLanguage.value = it }
+                        selectedOption = selectedLanguage,
+                        onOptionSelected = { selectedLanguage = it }
                     )
                 }
                 item {
@@ -104,8 +115,8 @@ fun SettingsScreen() {
                         R.drawable.temperature,
                         R.string.temp_unit,
                         tempOptions,
-                        selectedOption = selectedTempUnit.value,
-                        onOptionSelected = { selectedTempUnit.value = it }
+                        selectedOption = selectedTempUnit,
+                        onOptionSelected = { selectedTempUnit = it }
                     )
                 }
                 item {
@@ -113,8 +124,8 @@ fun SettingsScreen() {
                         R.drawable.location,
                         R.string.location,
                         locationOptions,
-                        selectedOption = selectedLocation.value,
-                        onOptionSelected = { selectedLocation.value = it }
+                        selectedOption = selectedLocation,
+                        onOptionSelected = { selectedLocation = it }
                     )
                 }
                 item {
@@ -130,7 +141,12 @@ fun SettingsScreen() {
         }
         Button(
             onClick = {
-                //viewModel.saveSettingsToDataStore()
+                viewModel.saveSettings(
+                    selectedLanguage,
+                    selectedTempUnit,
+                    selectedLocation,
+                    selectedWindSpeedUnit
+                )
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)

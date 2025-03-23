@@ -13,7 +13,7 @@
     <string name="english">English</string>
     <string name="system_default">Default</string>
     <string name="celsius">Celsius °C</string>
-    <string name="kelvin">Kelvin °K</string>
+    <string name="kelvin">Kelvin K</string>
     <string name="fahrenheit">Fahrenheit °F</string>
     <string name="gps">GPS</string>
     <string name="map">Map</string>
