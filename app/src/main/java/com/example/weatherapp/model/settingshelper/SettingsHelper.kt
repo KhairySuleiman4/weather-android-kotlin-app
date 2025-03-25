@@ -23,6 +23,7 @@ class SettingsHelper(private val context: Context){
         private val TEMPERATURE_UNIT_KEY = stringPreferencesKey("temperature_unit_key")
         private val LOCATION_KEY = stringPreferencesKey("location_key")
         private val WIND_SPEED_UNIT_KEY = stringPreferencesKey("wind_speed_unit_key")
+        private val LAT_LONG_KEY = stringPreferencesKey("lat_long_key")
     }
 
     val language: Flow<String> = context.dataStore.data.map {
@@ -39,6 +40,15 @@ class SettingsHelper(private val context: Context){
 
     val windSpeedUnit: Flow<String> = context.dataStore.data.map {
         it[WIND_SPEED_UNIT_KEY] ?: "m/s"
+    }
+
+    val latLong: Flow<Pair<String, String>> = context.dataStore.data.map { it ->
+        it[LAT_LONG_KEY]?.split(",").let{
+          if(it?.size == 2)
+              it[0] to it[1]
+          else
+              "0" to "0"
+        }
     }
 
     suspend fun writeLanguage(lang: String){
@@ -69,6 +79,12 @@ class SettingsHelper(private val context: Context){
         }
     }
 
+    suspend fun writeLatLong(lat: Double, long: Double){
+        context.dataStore.edit {
+            it[LAT_LONG_KEY] = "$lat,$long"
+            Log.i("SettingsHelper", "writeLatLong: $lat,$long")
+        }
+    }
 
     private fun changeLanguage(languageCode: String, context: Context) {
         //version >= 13

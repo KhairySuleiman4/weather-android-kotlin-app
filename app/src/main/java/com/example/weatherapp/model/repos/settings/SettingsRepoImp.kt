@@ -28,6 +28,8 @@ class SettingsRepoImp private constructor(private val helper: SettingsHelper): S
 
     override fun readWindSpeedUnit() = helper.windSpeedUnit
 
+    override fun readLatLong() = helper.latLong
+
 
     override suspend fun writeLanguageChoice(lang: String) = helper.writeLanguage(lang)
 
@@ -36,5 +38,7 @@ class SettingsRepoImp private constructor(private val helper: SettingsHelper): S
     override suspend fun writeLocationChoice(location: String) = helper.writeLocation(location)
 
     override suspend fun writeWindSpeedUnit(wind: String) = helper.writeWindSpeedUnit(wind)
+
+    override suspend fun writeLatLong(lat: Double, long: Double) = helper.writeLatLong(lat, long)
 
 }

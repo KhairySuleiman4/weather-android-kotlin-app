@@ -18,10 +18,6 @@ class SettingsViewModel(private val repo: AppRepoImp) : ViewModel(){
     private val mutableWind = MutableStateFlow("m/s")
     val wind = mutableWind.asStateFlow()
 
-    init {
-        //getSavedSettings()
-    }
-
     fun saveSettings(language: String, temp: String, location: String, wind: String){
         viewModelScope.launch {
             repo.writeLanguageChoice(language)

@@ -1,6 +1,7 @@
 package com.example.weatherapp.model.repos
 
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
+import kotlinx.coroutines.flow.Flow
 
 class AppRepoImp(private val settingsRepo: SettingsRepoImp): AppRepo {
     companion object{
@@ -27,6 +28,7 @@ class AppRepoImp(private val settingsRepo: SettingsRepoImp): AppRepo {
 
     override fun readWindSpeedUnit() = settingsRepo.readWindSpeedUnit()
 
+    override fun readLatLong() = settingsRepo.readLatLong()
 
     override suspend fun writeLanguageChoice(lang: String) = settingsRepo.writeLanguageChoice(lang)
 
@@ -35,4 +37,6 @@ class AppRepoImp(private val settingsRepo: SettingsRepoImp): AppRepo {
     override suspend fun writeLocationChoice(location: String) = settingsRepo.writeLocationChoice(location)
 
     override suspend fun writeWindSpeedUnit(wind: String) = settingsRepo.writeWindSpeedUnit(wind)
+
+    override suspend fun writeLatLong(lat: Double, long: Double) = settingsRepo.writeLatLong(lat, long)
 }

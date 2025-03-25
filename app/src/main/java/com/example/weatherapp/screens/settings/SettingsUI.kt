@@ -1,5 +1,6 @@
 package com.example.weatherapp.screens.settings
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,10 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.example.weatherapp.screens.mapactivity.MapActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.OnPrimary
 import com.example.weatherapp.ui.theme.Primary
@@ -165,6 +168,8 @@ fun SettingsItem(
     selectedOption: String? = null,
     onOptionSelected: (String) -> Unit = {}
 ) {
+    val mapString = stringResource(R.string.map)
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -206,7 +211,11 @@ fun SettingsItem(
                             )
                             .selectable(
                                 selected = (option == selectedOption),
-                                onClick = { onOptionSelected(option) },
+                                onClick = {
+                                    onOptionSelected(option)
+                                    if(option == mapString)
+                                        context.startActivity(Intent(context, MapActivity::class.java))
+                                },
                                 role = Role.RadioButton
                             ),
                         verticalAlignment = Alignment.CenterVertically

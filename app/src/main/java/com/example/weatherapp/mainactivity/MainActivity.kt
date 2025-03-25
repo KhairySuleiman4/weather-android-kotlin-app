@@ -20,7 +20,9 @@ import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.screens.alarms.AlarmsScreen
 import com.example.weatherapp.screens.favorite.FavoriteScreen
+import com.example.weatherapp.screens.home.HomeFactory
 import com.example.weatherapp.screens.home.HomeScreen
+import com.example.weatherapp.screens.home.HomeViewModel
 import com.example.weatherapp.screens.settings.SettingsFactory
 import com.example.weatherapp.screens.settings.SettingsScreen
 import com.example.weatherapp.ui.theme.Primary
@@ -56,7 +58,17 @@ fun NavHostContainer(
         modifier = Modifier.padding(paddingValues = padding)
     ) {
         composable("home") {
-            HomeScreen()
+            HomeScreen(
+                viewModel(
+                    factory = HomeFactory(
+                        AppRepoImp.getInstance(
+                            SettingsRepoImp.getInstance(
+                                SettingsHelper(context)
+                            )
+                        )
+                    )
+                )
+            )
         }
         composable("favorite") {
             FavoriteScreen()
