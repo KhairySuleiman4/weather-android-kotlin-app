@@ -1,18 +1,21 @@
 package com.example.weatherapp.model.repos
 
+import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
-import kotlinx.coroutines.flow.Flow
 
-class AppRepoImp(private val settingsRepo: SettingsRepoImp): AppRepo {
+class AppRepoImp(private val settingsRepo: SettingsRepoImp, private val locationRepo: LocationRepoImp): AppRepo {
+    val lat = locationRepo.lat
+    val long = locationRepo.long
+
     companion object{
         @Volatile
         private var instance: AppRepoImp? = null
 
-        fun getInstance(settingsRepo: SettingsRepoImp): AppRepoImp {
+        fun getInstance(settingsRepo: SettingsRepoImp, locationRepo: LocationRepoImp): AppRepoImp {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = AppRepoImp(settingsRepo)
+                        instance = AppRepoImp(settingsRepo, locationRepo)
                     }
                 }
             }
@@ -29,6 +32,10 @@ class AppRepoImp(private val settingsRepo: SettingsRepoImp): AppRepo {
     override fun readWindSpeedUnit() = settingsRepo.readWindSpeedUnit()
 
     override fun readLatLong() = settingsRepo.readLatLong()
+
+    override fun getUserLocation() = locationRepo.getCurrentLocation()
+
+    override fun areLocationPermissionsGranted() = locationRepo.arePermissionsAllowed()
 
     override suspend fun writeLanguageChoice(lang: String) = settingsRepo.writeLanguageChoice(lang)
 

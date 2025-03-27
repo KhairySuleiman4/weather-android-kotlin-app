@@ -23,7 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.R
+import com.example.weatherapp.model.locationhelper.LocationHelper
 import com.example.weatherapp.model.repos.AppRepoImp
+import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.google.android.gms.maps.model.CameraPosition
@@ -44,6 +46,9 @@ class MapActivity : ComponentActivity() {
                         AppRepoImp.getInstance(
                             SettingsRepoImp.getInstance(
                                 SettingsHelper(this)
+                            ),
+                            LocationRepoImp.getInstance(
+                                LocationHelper(this)
                             )
                         )
                     )

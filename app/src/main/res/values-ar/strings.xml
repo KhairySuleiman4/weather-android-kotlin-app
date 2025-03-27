@@ -21,4 +21,6 @@
     <string name="mps">متر/ثانية</string>
     <string name="mph">ميل/ساعة</string>
     <string name="save_settings">حفظ الإعدادات</string>
+    <string name="save_location">حفظ المكان</string>
+    <string name="permission_denied">تم رفض الإذن</string>
 </resources>

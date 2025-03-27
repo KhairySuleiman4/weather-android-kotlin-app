@@ -15,14 +15,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.weatherapp.model.locationhelper.LocationHelper
 import com.example.weatherapp.model.repos.AppRepoImp
+import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.screens.alarms.AlarmsScreen
 import com.example.weatherapp.screens.favorite.FavoriteScreen
 import com.example.weatherapp.screens.home.HomeFactory
 import com.example.weatherapp.screens.home.HomeScreen
-import com.example.weatherapp.screens.home.HomeViewModel
 import com.example.weatherapp.screens.settings.SettingsFactory
 import com.example.weatherapp.screens.settings.SettingsScreen
 import com.example.weatherapp.ui.theme.Primary
@@ -49,7 +50,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavHostContainer(
     navController: NavHostController,
-    padding: PaddingValues
+    padding: PaddingValues,
 ) {
     val context = LocalContext.current
     NavHost(
@@ -64,6 +65,9 @@ fun NavHostContainer(
                         AppRepoImp.getInstance(
                             SettingsRepoImp.getInstance(
                                 SettingsHelper(context)
+                            ),
+                            LocationRepoImp.getInstance(
+                                LocationHelper(context)
                             )
                         )
                     )
@@ -83,6 +87,9 @@ fun NavHostContainer(
                         AppRepoImp.getInstance(
                             SettingsRepoImp.getInstance(
                                 SettingsHelper(context)
+                            ),
+                            LocationRepoImp.getInstance(
+                                LocationHelper(context)
                             )
                         )
                     )

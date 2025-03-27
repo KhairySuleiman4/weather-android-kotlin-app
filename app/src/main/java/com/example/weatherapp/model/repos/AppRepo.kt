@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.repos
 
+import com.google.android.gms.location.LocationCallback
 import kotlinx.coroutines.flow.Flow
 
 interface AppRepo {
@@ -8,6 +9,8 @@ interface AppRepo {
     fun readLocationChoice(): Flow<String>
     fun readWindSpeedUnit(): Flow<String>
     fun readLatLong(): Flow<Pair<String, String>>
+    fun getUserLocation()
+    fun areLocationPermissionsGranted(): Boolean
 
     suspend fun writeLanguageChoice(lang: String)
     suspend fun writeTemperatureUnit(temp: String)

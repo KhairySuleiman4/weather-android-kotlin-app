@@ -20,7 +20,8 @@
     <string name="mps">Meter/Second</string>
     <string name="mph">Mile/Hour</string>
     <string name="save_settings">Save Settings</string>
-    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_map" translatable="false">MapActivity</string>
     <string name="save_location">Save Location</string>
+    <string name="permission_denied">Permissions Denied</string>
 
 </resources>
