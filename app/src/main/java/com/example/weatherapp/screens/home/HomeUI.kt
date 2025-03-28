@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,8 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.model.pojos.Response
+import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.settingshelper.toCelsius
 import com.example.weatherapp.model.settingshelper.toFahrenheit
@@ -39,6 +43,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     val context = LocalContext.current
     val deny = stringResource(R.string.permission_denied)
     val weatherState = viewModel.weatherDetails.collectAsState()
+    val forecastState = viewModel.forecastDetails.collectAsState()
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -47,6 +52,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
         if(bothGranted){
             viewModel.getCurrentLocation()
             viewModel.getWeatherDetails()
+            viewModel.getForecastDetails()
         }
         else
             Toast.makeText(context, deny, Toast.LENGTH_SHORT).show()
@@ -65,10 +71,18 @@ fun HomeScreen(viewModel: HomeViewModel) {
             } else{
                 viewModel.getCurrentLocation()
                 viewModel.getWeatherDetails()
+                viewModel.getForecastDetails()
             }
-        } else{
+        } else {
             viewModel.getLocationFromDataStore()
             viewModel.getWeatherDetails()
+            viewModel.getForecastDetails()
+        }
+    }
+
+    LaunchedEffect(viewModel.toastEvent) {
+        viewModel.toastEvent.collect{
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -81,9 +95,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     ) {
         when(val weatherResponse = weatherState.value){
             is Response.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
+                Loading()
             }
             is Response.Success -> {
                 val settings = hashMapOf(
@@ -94,7 +106,30 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 )
                 WeatherDetailsUI(weatherResponse.data, settings)
             }
-            else -> null
+            is Response.Failure -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "Weather can't be shown right now",
+                        fontSize = 24.sp
+                    )
+                }
+            }
+        }
+        when(val forecastResponse = forecastState.value){
+            is Response.Loading -> {
+                Loading()
+            }
+            is Response.Success -> {
+                ForecastDetailsUI(forecastResponse.data, viewModel.temp)
+            }
+            is Response.Failure -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "Forecast can't be shown right now",
+                        fontSize = 24.sp
+                    )
+                }
+            }
         }
     }
 }
@@ -104,13 +139,35 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
     val temp = getTempWithCurrentUnit(weatherDetails.temp, settings["Temperature"])
     val wind = getWindWithCurrentUnit(weatherDetails.wind, settings["Wind"])
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Column {
-            Text(text = temp.toString())
+            Text(text = temp.toString(), fontSize = 40.sp)
             Spacer(modifier = Modifier.size(20.dp))
-            Text(text = wind.trimToTwoDecimals())
+            Text(text = wind.trimToTwoDecimals(), fontSize = 40.sp)
         }
+    }
+}
 
+@Composable
+fun ForecastDetailsUI(forecastDetails: List<WeatherForecast>, tempUnit: String){
+    Column {
+        Text(
+            text = "List size:" + forecastDetails.size.toString(),
+            fontSize = 40.sp)
+        Spacer(modifier = Modifier.size(20.dp))
+        Text(text = "Temp: " + getTempWithCurrentUnit(forecastDetails[0].temp.toDouble(), tempUnit).toString(), fontSize = 40.sp)
+    }
+    /*LazyRow {
+        items(forecastDetails.size){
+            Fore
+        }
+    }*/
+}
+
+@Composable
+fun Loading(){
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
     }
 }
 

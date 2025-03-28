@@ -8,8 +8,8 @@ package com.example.weatherapp.model.pojos.local.forecast
 data class WeatherForecast(
     //@PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val cityId: Int, // Foreign Key (linked to WeatherDetails)
-    val dt: Long,
-    val temp: Int,
+    var cityId: Int,    // Foreign Key (linked to WeatherDetails)
+    val dt: String,
+    var temp: Int,
     val icon: String
 )

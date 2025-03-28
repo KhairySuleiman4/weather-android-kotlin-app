@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.pojos.response.forecast
 
+import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.response.weather.Clouds
 import com.example.weatherapp.model.pojos.response.weather.Main
 import com.example.weatherapp.model.pojos.response.weather.Weather
@@ -13,3 +14,12 @@ data class ForecastItem(
     val wind: Wind,
     val dt_txt: String
 )
+
+fun ForecastItem.toWeatherForecast(): WeatherForecast{
+    return WeatherForecast(
+        temp = main.temp.toInt(),
+        cityId = 0,
+        dt = dt_txt,
+        icon = weather[0].icon
+    )
+}

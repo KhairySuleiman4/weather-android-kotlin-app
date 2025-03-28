@@ -1,12 +1,19 @@
 package com.example.weatherapp.model.repos
 
+import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
+import com.example.weatherapp.model.repos.forecasts.ForecastsRepoImp
 import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.repos.weather.WeatherRepoImp
 import kotlinx.coroutines.flow.Flow
 
-class AppRepoImp(private val settingsRepo: SettingsRepoImp, private val locationRepo: LocationRepoImp, private val weatherRepo: WeatherRepoImp): AppRepo {
+class AppRepoImp(
+    private val settingsRepo: SettingsRepoImp,
+    private val locationRepo: LocationRepoImp,
+    private val weatherRepo: WeatherRepoImp,
+    private val forecastRepo: ForecastsRepoImp
+): AppRepo {
     val lat = locationRepo.lat
     val long = locationRepo.long
 
@@ -14,11 +21,21 @@ class AppRepoImp(private val settingsRepo: SettingsRepoImp, private val location
         @Volatile
         private var instance: AppRepoImp? = null
 
-        fun getInstance(settingsRepo: SettingsRepoImp, locationRepo: LocationRepoImp, weatherRepo: WeatherRepoImp): AppRepoImp {
+        fun getInstance(
+            settingsRepo: SettingsRepoImp,
+            locationRepo: LocationRepoImp,
+            weatherRepo: WeatherRepoImp,
+            forecastRepo: ForecastsRepoImp
+        ): AppRepoImp {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = AppRepoImp(settingsRepo, locationRepo, weatherRepo)
+                        instance =
+                            AppRepoImp(
+                                settingsRepo,
+                                locationRepo,
+                                weatherRepo,
+                                forecastRepo)
                     }
                 }
             }
@@ -40,9 +57,9 @@ class AppRepoImp(private val settingsRepo: SettingsRepoImp, private val location
 
     override fun areLocationPermissionsGranted() = locationRepo.arePermissionsAllowed()
 
-    override suspend fun getWeatherDetails(lat: Double, long: Double): Flow<WeatherDetails> {
-        return weatherRepo.getWeatherDetails(lat, long)
-    }
+    override suspend fun getWeatherDetails(lat: Double, long: Double) = weatherRepo.getWeatherDetails(lat, long)
+
+    override suspend fun getForecastDetails(lat: Double, long: Double) = forecastRepo.getForecastDetails(lat, long)
 
     override suspend fun writeLanguageChoice(lang: String) = settingsRepo.writeLanguageChoice(lang)
 

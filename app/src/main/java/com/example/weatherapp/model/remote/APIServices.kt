@@ -15,6 +15,10 @@ interface APIServices {
         @Query("appid") apiKey: String = BuildConfig.WEATHER_API_KEY
     ): Response<WeatherResponse>
 
-    @GET
-    suspend fun getForecastDetails(): Response<ForecastResponse>
+    @GET("forecast")
+    suspend fun getForecastDetails(
+        @Query("lat") lat: Double,
+        @Query("lon") long: Double,
+        @Query("appid") apiKey: String = BuildConfig.WEATHER_API_KEY
+    ): Response<ForecastResponse>
 }

@@ -19,6 +19,7 @@ import com.example.weatherapp.model.locationhelper.LocationHelper
 import com.example.weatherapp.model.remote.RemoteDataSourceImp
 import com.example.weatherapp.model.remote.RetrofitHelper
 import com.example.weatherapp.model.repos.AppRepoImp
+import com.example.weatherapp.model.repos.forecasts.ForecastsRepoImp
 import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.repos.weather.WeatherRepoImp
@@ -74,6 +75,9 @@ fun NavHostContainer(
                             ),
                             WeatherRepoImp.getInstance(
                                 RemoteDataSourceImp(RetrofitHelper.apiService)
+                            ),
+                            ForecastsRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService)
                             )
                         )
                     )
@@ -98,6 +102,9 @@ fun NavHostContainer(
                                 LocationHelper(context)
                             ),
                             WeatherRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                            ),
+                            ForecastsRepoImp.getInstance(
                                 RemoteDataSourceImp(RetrofitHelper.apiService)
                             )
                         )

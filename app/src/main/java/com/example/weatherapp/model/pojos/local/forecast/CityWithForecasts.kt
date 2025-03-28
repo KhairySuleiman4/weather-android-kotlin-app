@@ -4,7 +4,7 @@ package com.example.weatherapp.model.pojos.local.forecast
 //import androidx.room.Embedded
 //import androidx.room.Relation
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
-
+// needed when fetching the city with hourly and daily details from db
 data class CityWithForecasts(
     //@Embedded
     val city: WeatherDetails,
