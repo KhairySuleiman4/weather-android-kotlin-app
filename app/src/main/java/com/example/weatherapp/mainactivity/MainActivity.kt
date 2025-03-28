@@ -16,9 +16,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.weatherapp.model.locationhelper.LocationHelper
+import com.example.weatherapp.model.remote.RemoteDataSourceImp
+import com.example.weatherapp.model.remote.RetrofitHelper
 import com.example.weatherapp.model.repos.AppRepoImp
 import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
+import com.example.weatherapp.model.repos.weather.WeatherRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.screens.alarms.AlarmsScreen
 import com.example.weatherapp.screens.favorite.FavoriteScreen
@@ -68,6 +71,9 @@ fun NavHostContainer(
                             ),
                             LocationRepoImp.getInstance(
                                 LocationHelper(context)
+                            ),
+                            WeatherRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService)
                             )
                         )
                     )
@@ -90,6 +96,9 @@ fun NavHostContainer(
                             ),
                             LocationRepoImp.getInstance(
                                 LocationHelper(context)
+                            ),
+                            WeatherRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService)
                             )
                         )
                     )

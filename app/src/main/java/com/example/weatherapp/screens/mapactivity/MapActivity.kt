@@ -24,9 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.R
 import com.example.weatherapp.model.locationhelper.LocationHelper
+import com.example.weatherapp.model.remote.RemoteDataSourceImp
+import com.example.weatherapp.model.remote.RetrofitHelper
 import com.example.weatherapp.model.repos.AppRepoImp
 import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
+import com.example.weatherapp.model.repos.weather.WeatherRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -49,6 +52,9 @@ class MapActivity : ComponentActivity() {
                             ),
                             LocationRepoImp.getInstance(
                                 LocationHelper(this)
+                            ),
+                            WeatherRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService)
                             )
                         )
                     )
