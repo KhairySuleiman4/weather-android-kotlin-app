@@ -23,5 +23,10 @@
     <string name="title_activity_map" translatable="false">MapActivity</string>
     <string name="save_location">Save Location</string>
     <string name="permission_denied">Permissions Denied</string>
-
+    <string name="celsius_unit">°C</string>
+    <string name="kelvin_unit">K</string>
+    <string name="fahrenheit_unit">°F</string>
+    <string name="mps_unit">m/s</string>
+    <string name="mph_unit">mile/h</string>
+    <string name="status_icon">Weather Status Icon</string>
 </resources>

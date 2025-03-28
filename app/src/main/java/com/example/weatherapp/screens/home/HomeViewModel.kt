@@ -1,5 +1,6 @@
 package com.example.weatherapp.screens.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
     var lang: String = "English"
@@ -39,6 +42,8 @@ class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
 
     private val mutableToastEvent = MutableSharedFlow<String>()
     val toastEvent = mutableToastEvent.asSharedFlow()
+    @SuppressLint("SimpleDateFormat")
+    val currentTime = SimpleDateFormat("HH:mm").format(Date())
 
     fun getStoredSettings() = runBlocking {
         lang = repo.readLanguageChoice().first()

@@ -23,4 +23,10 @@
     <string name="save_settings">حفظ الإعدادات</string>
     <string name="save_location">حفظ المكان</string>
     <string name="permission_denied">تم رفض الإذن</string>
+    <string name="celsius_unit">°س</string>
+    <string name="kelvin_unit">كلفن</string>
+    <string name="fahrenheit_unit">°ف</string>
+    <string name="mps_unit">م/ث</string>
+    <string name="mph_unit">ميل/ساعة</string>
+    <string name="status_icon">أيقونة لحالة الطقس</string>
 </resources>

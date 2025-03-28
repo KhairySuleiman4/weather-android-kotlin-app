@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val Primary = Color(0xFF0D0528)
 val OnPrimary = Color(0xFF160743)
+val Day = Color(0xFF1179A0)
+val Night = Color(0xFF0D43AD)
+val Background = Color(0xFF0d3986)
