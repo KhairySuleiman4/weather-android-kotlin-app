@@ -19,17 +19,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,40 +37,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.R
-import com.example.weatherapp.model.locationhelper.LocationHelper
 import com.example.weatherapp.model.pojos.Response
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
-import com.example.weatherapp.model.remote.RemoteDataSourceImp
-import com.example.weatherapp.model.remote.RetrofitHelper
-import com.example.weatherapp.model.repos.AppRepoImp
-import com.example.weatherapp.model.repos.forecasts.ForecastsRepoImp
-import com.example.weatherapp.model.repos.location.LocationRepoImp
-import com.example.weatherapp.model.repos.settings.SettingsRepoImp
-import com.example.weatherapp.model.repos.weather.WeatherRepoImp
-import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.model.settingshelper.toCelsius
 import com.example.weatherapp.model.settingshelper.toFahrenheit
 import com.example.weatherapp.model.settingshelper.toMilePerHour
-import com.example.weatherapp.model.settingshelper.trimToTwoDecimals
 import com.example.weatherapp.ui.theme.Background
-import com.example.weatherapp.ui.theme.Day
 import com.example.weatherapp.ui.theme.Night
-import com.example.weatherapp.ui.theme.Primary
-import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
     val context = LocalContext.current
     val deny = stringResource(R.string.permission_denied)
     val weatherState = viewModel.weatherDetails.collectAsState()
     val forecastState = viewModel.forecastDetails.collectAsState()
+    val time = viewModel.currentDateAndTime.substring(11)
+    val settings = hashMapOf(
+        "Language" to viewModel.lang,
+        "Temperature" to viewModel.temp,
+        "Location" to viewModel.location,
+        "Wind" to viewModel.wind
+    )
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -114,85 +109,76 @@ fun HomeScreen(viewModel: HomeViewModel) {
         }
     }
 
-    Scaffold {
-        Box(
+    PullToRefreshBox(
+        isRefreshing = viewModel.isRefreshing.value,
+        onRefresh = { viewModel.refreshHome() }
+    ) {
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Night)
-                .padding(it)
         ) {
             when (val weatherResponse = weatherState.value) {
                 is Response.Loading -> {
-                    Loading()
+                    item {
+                        Loading()
+                    }
                 }
 
                 is Response.Success -> {
-                    val settings = hashMapOf(
-                        "Language" to viewModel.lang,
-                        "Temperature" to viewModel.temp,
-                        "Location" to viewModel.location,
-                        "Wind" to viewModel.wind
-                    )
-                    WeatherDetailsUI(weatherResponse.data, settings, viewModel.currentTime)
+                    item {
+                        WeatherDetailsUI(weatherResponse.data, settings, time)
+                    }
                 }
 
                 is Response.Failure -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "Weather can't be shown right now",
-                            fontSize = 24.sp
-                        )
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Weather can't be shown right now",
+                                fontSize = 24.sp
+                            )
+                        }
                     }
                 }
             }
             when (val forecastResponse = forecastState.value) {
                 is Response.Loading -> {
-                    Loading()
+                    item {
+                        Loading()
+                    }
                 }
 
                 is Response.Success -> {
-                    ForecastDetailsUI(forecastResponse.data, viewModel.temp)
+                    item {
+                        ForecastDetailsUI(
+                            forecastResponse.data,
+                            viewModel.temp,
+                            viewModel.currentDateAndTime
+                        )
+                    }
                 }
 
                 is Response.Failure -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "Forecast can't be shown right now",
-                            fontSize = 24.sp
-                        )
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Forecast can't be shown right now",
+                                fontSize = 24.sp
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
-
-@Preview
-@Composable
-fun PreviewedUI() {
-    val context = LocalContext.current
-    HomeScreen(
-        viewModel(
-            factory = HomeFactory(
-                AppRepoImp.getInstance(
-                    SettingsRepoImp.getInstance(
-                        SettingsHelper(context)
-                    ),
-                    LocationRepoImp.getInstance(
-                        LocationHelper(context)
-                    ),
-                    WeatherRepoImp.getInstance(
-                        RemoteDataSourceImp(RetrofitHelper.apiService)
-                    ),
-                    ForecastsRepoImp.getInstance(
-                        RemoteDataSourceImp(RetrofitHelper.apiService)
-                    )
-                )
-            )
-        )
-    )
-}
-
 
 @Composable
 fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, String>, time: String) {
@@ -204,7 +190,6 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -246,7 +231,7 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
 
         Text(
             modifier = Modifier.padding(top = 4.dp),
-            text = temp,
+            text = "${temp.first} ${temp.second}",
             fontSize = 48.sp,
             color = Color.White
         )
@@ -272,39 +257,130 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            WeatherDetailItem(R.drawable.cloud, "${weatherDetails.clouds} %")
-            WeatherDetailItem(R.drawable.humidity, "${weatherDetails.humidity} %")
+            WeatherDetailItem(R.drawable.cloud, weatherDetails.clouds.toString() to "%")
+            WeatherDetailItem(R.drawable.humidity, "${weatherDetails.humidity}" to "%")
             WeatherDetailItem(R.drawable.wind, wind)
         }
     }
 }
 
-@SuppressLint("DiscouragedApi")
-fun getIconNameFromDrawable(context: Context, icon: String): Int {
-    val formattedIcon = "_" + icon.substring(1)
-    return context.resources.getIdentifier(formattedIcon, "drawable", context.packageName)
+@Composable
+fun ForecastDetailsUI(
+    forecastDetails: List<WeatherForecast>,
+    tempUnit: String,
+    dateAndTime: String
+) {
+    val context = LocalContext.current
+    val hourlyList = mutableListOf<WeatherForecast>()
+    val dailyList = mutableListOf<WeatherForecast>()
+    val todayInNumbers = dateAndTime.split(" ")[0]
+    for (forecast in forecastDetails) {
+        if (forecast.dt.split(" ")[0] == todayInNumbers)
+            hourlyList.add(forecast)
+        else
+            dailyList.add(forecast)
+    }
+    val averages = getTemperaturesOfFiveDays(context, tempUnit, dailyList)
+    val icons = getIconsOfFiveDays(dailyList)
+    val nextFiveDays = getTheNextFiveDaysAsStrings(todayInNumbers)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Card(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(Background)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.today),
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(text = todayInNumbers, color = Color.White, fontSize = 16.sp)
+                    }
+                    LazyRow {
+                        items(hourlyList.size) {
+                            HourlyColumn(hourlyList[it], tempUnit)
+                        }
+                    }
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(Background)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.five_day_forecast),
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Image(
+                            modifier = Modifier
+                                .size(24.dp),
+                            painter = painterResource(R.drawable.calendar),
+                            contentDescription = null
+                        )
+                    }
+                    Column {
+                        for (i in averages.indices) {
+                            DailyRow(averages[i], nextFiveDays[i], icons[i])
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
-/*Column {
-    Text(text = temp.toString(), fontSize = 40.sp)
-    Spacer(modifier = Modifier.size(20.dp))
-    Text(text = wind.trimToTwoDecimals(), fontSize = 40.sp)
-}*/
-
 @Composable
-fun ForecastDetailsUI(forecastDetails: List<WeatherForecast>, tempUnit: String) {
-    /*Column {
+fun WeatherDetailItem(iconRes: Int, value: Pair<String, String>) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Image(
+            modifier = Modifier.size(32.dp),
+            painter = painterResource(id = iconRes),
+            contentDescription = ""
+        )
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "List size:" + forecastDetails.size.toString(),
-            fontSize = 40.sp)
-        Spacer(modifier = Modifier.size(20.dp))
-        Text(text = "Temp: " + getTempWithCurrentUnit(forecastDetails[0].temp.toDouble(), tempUnit).toString(), fontSize = 40.sp)
-    }*/
-    /*LazyRow {
-        items(forecastDetails.size){
-            Fore
-        }
-    }*/
+            text = "${value.first} ${value.second}",
+            fontSize = 16.sp,
+            color = Color.White
+        )
+    }
 }
 
 @Composable
@@ -315,33 +391,163 @@ fun Loading() {
 }
 
 @Composable
-fun WeatherDetailItem(iconRes: Int, value: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(8.dp)
+fun HourlyColumn(forecast: WeatherForecast, tempUnit: String) {
+    val context = LocalContext.current
+    val iconRes = getIconNameFromDrawable(context, forecast.icon)
+    val temp = getTempWithCurrentUnit(context, forecast.temp.toDouble(), tempUnit)
+    val time = forecast.dt.split(" ")[1].substring(0, 5)
+
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .width(64.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = iconRes),
-            contentDescription = ""
+        Text(
+            text = time,
+            color = Color.White,
+            fontSize = 14.sp
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = value, fontSize = 16.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(4.dp))
+        Image(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(32.dp)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "${temp.first} ${temp.second}",
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
-fun getWindWithCurrentUnit(context: Context, wind: Double, unit: String?): String {
-    return when (unit) {
-        context.getString(R.string.mph) -> "${wind.toMilePerHour()} ${context.getString(R.string.mph_unit)}"
-        else -> "${wind} ${context.getString(R.string.mps_unit)}"
+@Composable
+fun DailyRow(tempAverage: Pair<String, String>, day: Pair<String, String>, icon: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "${day.first}\n${day.second}",
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            modifier = Modifier.size(32.dp)
+        )
+        Text(
+            text = "${tempAverage.first} ${tempAverage.second}",
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp)
+        )
     }
 }
 
-fun getTempWithCurrentUnit(context: Context, temp: Double, unit: String?): String {
+@SuppressLint("DiscouragedApi")
+fun getIconNameFromDrawable(context: Context, icon: String): Int {
+    val formattedIcon = "_$icon"
+    return context.resources.getIdentifier(formattedIcon, "drawable", context.packageName)
+}
+
+fun getWindWithCurrentUnit(context: Context, wind: Double, unit: String?): Pair<String, String> {
     return when (unit) {
-        context.getString(R.string.celsius) -> "${temp.toCelsius()} ${context.getString(R.string.celsius_unit)}"
-        context.getString(R.string.fahrenheit) -> "${temp.toFahrenheit()} ${context.getString(R.string.fahrenheit_unit)}"
-        else -> "${temp.toInt()} ${context.getString(R.string.kelvin_unit)}"
+        context.getString(R.string.mph) -> wind.toMilePerHour()
+            .toString() to context.getString(R.string.mph_unit)
+
+        else -> wind.toString() to context.getString(R.string.mps_unit)
+    }
+}
+
+fun getTempWithCurrentUnit(context: Context, temp: Double, unit: String?): Pair<String, String> {
+    return when (unit) {
+        context.getString(R.string.celsius) -> temp.toCelsius().toInt()
+            .toString() to context.getString(R.string.celsius_unit)
+
+        context.getString(R.string.fahrenheit) -> temp.toFahrenheit().toInt()
+            .toString() to context.getString(R.string.fahrenheit_unit)
+
+        else -> temp.toInt().toString() to context.getString(R.string.kelvin_unit)
+    }
+}
+
+fun getTemperaturesOfFiveDays(
+    context: Context,
+    unit: String,
+    dailyList: MutableList<WeatherForecast>
+): List<Pair<String, String>> {
+    val listOfDoubleAverages = dailyList
+        .groupBy { it.dt.substring(0, 10) }
+        .values
+        .map { forecasts ->
+            forecasts.map {
+                it.temp
+            }.average()
+        }
+    val listOfPairs = mutableListOf<Pair<String, String>>()
+    for (average in listOfDoubleAverages) {
+        listOfPairs.add(getTempWithCurrentUnit(context, average, unit))
+    }
+    return listOfPairs
+}
+
+fun getIconsOfFiveDays(dailyList: MutableList<WeatherForecast>): List<Int> {
+    return dailyList
+        .groupBy { it.dt.substring(0, 10) }
+        .values
+        .map { dayList ->
+            val mostFrequentIcon = dayList.groupingBy { it.icon }
+                .eachCount()
+                .maxByOrNull { it.value }?.key ?: ""
+            mapIconToResourceId(mostFrequentIcon)
+        }
+}
+
+private fun mapIconToResourceId(iconName: String): Int {
+    return when (iconName) {
+        "01d" -> R.drawable._01d
+        "01n" -> R.drawable._01n
+        "02d" -> R.drawable._02d
+        "02n" -> R.drawable._02n
+        "03d" -> R.drawable._03d
+        "03n" -> R.drawable._03n
+        "04d" -> R.drawable._04d
+        "04n" -> R.drawable._04n
+        "09d" -> R.drawable._09d
+        "09n" -> R.drawable._09n
+        "10d" -> R.drawable._10d
+        "10n" -> R.drawable._10n
+        "11d" -> R.drawable._11d
+        "11n" -> R.drawable._11n
+        "13d" -> R.drawable._13d
+        "13n" -> R.drawable._13n
+        "50d" -> R.drawable._50d
+        "50n" -> R.drawable._50n
+        else -> R.drawable._01n
+    }
+}
+
+fun getTheNextFiveDaysAsStrings(todayInNumbers: String): List<Pair<String, String>> {
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+
+    val calendar = Calendar.getInstance()
+    calendar.time = sdf.parse(todayInNumbers)!!
+
+    return List(5) {
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        val date = sdf.format(calendar.time)
+        val dayName = dayFormat.format(calendar.time)
+        dayName to date
     }
 }

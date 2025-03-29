@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
     var lang: String = "English"
@@ -42,8 +43,21 @@ class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
 
     private val mutableToastEvent = MutableSharedFlow<String>()
     val toastEvent = mutableToastEvent.asSharedFlow()
+
+    private val mutableIsRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = mutableIsRefreshing
+
     @SuppressLint("SimpleDateFormat")
-    val currentTime = SimpleDateFormat("HH:mm").format(Date())
+    val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+
+    fun refreshHome(){
+        viewModelScope.launch {
+            mutableIsRefreshing.value = true
+            getWeatherDetails()
+            getForecastDetails()
+            mutableIsRefreshing.value = false
+        }
+    }
 
     fun getStoredSettings() = runBlocking {
         lang = repo.readLanguageChoice().first()

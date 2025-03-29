@@ -2,19 +2,18 @@ package com.example.weatherapp.model.settingshelper
 
 import android.annotation.SuppressLint
 
-fun Double.toCelsius(): String{
-    return (this - 273.15).toInt().toString()
+fun Double.toCelsius(): Double{
+    return (this - 273.15)
 }
 
-fun Double.toFahrenheit(): String{
-    return ((this - 273.15) * 1.8 + 32).toInt().toString()
+fun Double.toFahrenheit(): Double{
+    return ((this - 273.15) * 1.8 + 32)
 }
 
-fun Double.toMilePerHour(): String{
-    return (this * 2.237).trimToTwoDecimals()
+fun Double.toMilePerHour(): Double{
+    return 0.0//(this.trimToTwoDecimals() * 2.24)
 }
 
-@SuppressLint("DefaultLocale")
-fun Double.trimToTwoDecimals(): String {
-    return String.format("%.2f", this)
+fun Double.trimToTwoDecimals(): Double{
+    return String.format("%.2f", this).toDouble()
 }

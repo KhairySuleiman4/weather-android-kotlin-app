@@ -29,4 +29,6 @@
     <string name="mps_unit">m/s</string>
     <string name="mph_unit">mile/h</string>
     <string name="status_icon">Weather Status Icon</string>
+    <string name="today">Today</string>
+    <string name="five_day_forecast">5-day Forecast</string>
 </resources>
