@@ -48,7 +48,10 @@ class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
     val isRefreshing: StateFlow<Boolean> = mutableIsRefreshing
 
     @SuppressLint("SimpleDateFormat")
-    val currentDateAndTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+    private val mutableCurrentDateAndTime = MutableStateFlow(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(Date()))
+    val currentDateAndTime = mutableCurrentDateAndTime
+    private val mutableDateAndTimeToBeDisplayed = MutableStateFlow(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()))
+    val dateAndTimeToBeDisplayed = mutableDateAndTimeToBeDisplayed
 
     fun refreshHome(){
         viewModelScope.launch {

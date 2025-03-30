@@ -45,15 +45,20 @@ import com.example.weatherapp.R
 import com.example.weatherapp.model.pojos.Response
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
+import com.example.weatherapp.model.settingshelper.formatDateBasedOnLocale
+import com.example.weatherapp.model.settingshelper.formatNumber
 import com.example.weatherapp.model.settingshelper.toCelsius
 import com.example.weatherapp.model.settingshelper.toFahrenheit
 import com.example.weatherapp.model.settingshelper.toMilePerHour
+import com.example.weatherapp.model.settingshelper.translateWeatherDescription
 import com.example.weatherapp.ui.theme.Background
 import com.example.weatherapp.ui.theme.Night
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
@@ -61,7 +66,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     val deny = stringResource(R.string.permission_denied)
     val weatherState = viewModel.weatherDetails.collectAsState()
     val forecastState = viewModel.forecastDetails.collectAsState()
-    val time = viewModel.currentDateAndTime.substring(11)
+    val time = viewModel.dateAndTimeToBeDisplayed.collectAsState()
     val settings = hashMapOf(
         "Language" to viewModel.lang,
         "Temperature" to viewModel.temp,
@@ -127,7 +132,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
 
                 is Response.Success -> {
                     item {
-                        WeatherDetailsUI(weatherResponse.data, settings, time)
+                        WeatherDetailsUI(weatherResponse.data, settings, time.value.substring(11, 16))
                     }
                 }
 
@@ -139,7 +144,8 @@ fun HomeScreen(viewModel: HomeViewModel) {
                         ) {
                             Text(
                                 text = "Weather can't be shown right now",
-                                fontSize = 24.sp
+                                fontSize = 24.sp,
+                                color = Color.White
                             )
                         }
                     }
@@ -157,7 +163,8 @@ fun HomeScreen(viewModel: HomeViewModel) {
                         ForecastDetailsUI(
                             forecastResponse.data,
                             viewModel.temp,
-                            viewModel.currentDateAndTime
+                            viewModel.currentDateAndTime.value,
+                            viewModel.dateAndTimeToBeDisplayed.value.split(" ")[0]
                         )
                     }
                 }
@@ -170,7 +177,8 @@ fun HomeScreen(viewModel: HomeViewModel) {
                         ) {
                             Text(
                                 text = "Forecast can't be shown right now",
-                                fontSize = 24.sp
+                                fontSize = 24.sp,
+                                color = Color.White
                             )
                         }
                     }
@@ -238,7 +246,7 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
 
         Text(
             modifier = Modifier.padding(top = 4.dp),
-            text = weatherDetails.description,
+            text = translateWeatherDescription(weatherDetails.description),
             fontSize = 32.sp,
             color = Color.White
         )
@@ -257,8 +265,8 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            WeatherDetailItem(R.drawable.cloud, weatherDetails.clouds.toString() to "%")
-            WeatherDetailItem(R.drawable.humidity, "${weatherDetails.humidity}" to "%")
+            WeatherDetailItem(R.drawable.cloud, formatNumber(weatherDetails.clouds) to "%")
+            WeatherDetailItem(R.drawable.humidity, formatNumber(weatherDetails.humidity) to "%")
             WeatherDetailItem(R.drawable.wind, wind)
         }
     }
@@ -268,7 +276,8 @@ fun WeatherDetailsUI(weatherDetails: WeatherDetails, settings: Map<String, Strin
 fun ForecastDetailsUI(
     forecastDetails: List<WeatherForecast>,
     tempUnit: String,
-    dateAndTime: String
+    dateAndTime: String,
+    dateDisplayed: String
 ) {
     val context = LocalContext.current
     val hourlyList = mutableListOf<WeatherForecast>()
@@ -314,7 +323,7 @@ fun ForecastDetailsUI(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Text(text = todayInNumbers, color = Color.White, fontSize = 16.sp)
+                        Text(text = dateDisplayed, color = Color.White, fontSize = 16.sp)
                     }
                     LazyRow {
                         items(hourlyList.size) {
@@ -395,7 +404,7 @@ fun HourlyColumn(forecast: WeatherForecast, tempUnit: String) {
     val context = LocalContext.current
     val iconRes = getIconNameFromDrawable(context, forecast.icon)
     val temp = getTempWithCurrentUnit(context, forecast.temp.toDouble(), tempUnit)
-    val time = forecast.dt.split(" ")[1].substring(0, 5)
+    val time = formatDateBasedOnLocale(forecast.dt.split(" ")[1].substring(0, 5))
 
     Column(
         modifier = Modifier
@@ -462,22 +471,20 @@ fun getIconNameFromDrawable(context: Context, icon: String): Int {
 
 fun getWindWithCurrentUnit(context: Context, wind: Double, unit: String?): Pair<String, String> {
     return when (unit) {
-        context.getString(R.string.mph) -> wind.toMilePerHour()
-            .toString() to context.getString(R.string.mph_unit)
+        context.getString(R.string.mph) -> formatNumber(wind.toMilePerHour()) to context.getString(R.string.mph_unit)
 
-        else -> wind.toString() to context.getString(R.string.mps_unit)
+        else -> formatNumber(wind) to context.getString(R.string.mps_unit)
     }
 }
 
 fun getTempWithCurrentUnit(context: Context, temp: Double, unit: String?): Pair<String, String> {
     return when (unit) {
-        context.getString(R.string.celsius) -> temp.toCelsius().toInt()
-            .toString() to context.getString(R.string.celsius_unit)
+        context.getString(R.string.celsius) -> formatNumber(temp.toCelsius().toInt()) to
+                context.getString(R.string.celsius_unit)
 
-        context.getString(R.string.fahrenheit) -> temp.toFahrenheit().toInt()
-            .toString() to context.getString(R.string.fahrenheit_unit)
+        context.getString(R.string.fahrenheit) -> formatNumber(temp.toFahrenheit().toInt()) to context.getString(R.string.fahrenheit_unit)
 
-        else -> temp.toInt().toString() to context.getString(R.string.kelvin_unit)
+        else -> formatNumber(temp.toInt()) to context.getString(R.string.kelvin_unit)
     }
 }
 
