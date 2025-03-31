@@ -2,7 +2,6 @@ package com.example.weatherapp.model.repos
 
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
-import com.google.android.gms.location.LocationCallback
 import kotlinx.coroutines.flow.Flow
 
 interface AppRepo {
@@ -13,6 +12,9 @@ interface AppRepo {
     fun readLatLong(): Flow<Pair<String, String>>
     fun getUserLocation()
     fun areLocationPermissionsGranted(): Boolean
+    fun isInternetAvailable(): Boolean
+    fun getWeatherDetailsForHome(): Flow<WeatherDetails>
+    fun getForecastsForHome(): Flow<List<WeatherForecast>>
 
     suspend fun getWeatherDetails(lat: Double, long: Double): Flow<WeatherDetails>
     suspend fun getForecastDetails(lat: Double, long: Double): Flow<List<WeatherForecast>>
@@ -21,4 +23,5 @@ interface AppRepo {
     suspend fun writeLocationChoice(location: String)
     suspend fun writeWindSpeedUnit(wind: String)
     suspend fun writeLatLong(lat: Double, long: Double)
+    suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>)
 }

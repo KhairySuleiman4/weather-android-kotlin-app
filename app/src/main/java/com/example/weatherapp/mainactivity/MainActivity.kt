@@ -15,6 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.weatherapp.model.local.WeatherDatabase
+import com.example.weatherapp.model.local.forecasts.ForecastsLocalDataSourceImp
+import com.example.weatherapp.model.local.weather.WeatherLocalDataSourceImp
 import com.example.weatherapp.model.locationhelper.LocationHelper
 import com.example.weatherapp.model.remote.RemoteDataSourceImp
 import com.example.weatherapp.model.remote.RetrofitHelper
@@ -74,10 +77,19 @@ fun NavHostContainer(
                                 LocationHelper(context)
                             ),
                             WeatherRepoImp.getInstance(
-                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                WeatherLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao())
                             ),
                             ForecastsRepoImp.getInstance(
-                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                ForecastsLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao()
+                                )
                             )
                         )
                     )
@@ -102,10 +114,19 @@ fun NavHostContainer(
                                 LocationHelper(context)
                             ),
                             WeatherRepoImp.getInstance(
-                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                WeatherLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao())
                             ),
                             ForecastsRepoImp.getInstance(
-                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                ForecastsLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao()
+                                )
                             )
                         )
                     )

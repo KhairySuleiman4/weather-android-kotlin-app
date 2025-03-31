@@ -23,6 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.R
+import com.example.weatherapp.model.local.WeatherDatabase
+import com.example.weatherapp.model.local.forecasts.ForecastsLocalDataSourceImp
+import com.example.weatherapp.model.local.weather.WeatherLocalDataSourceImp
 import com.example.weatherapp.model.locationhelper.LocationHelper
 import com.example.weatherapp.model.remote.RemoteDataSourceImp
 import com.example.weatherapp.model.remote.RetrofitHelper
@@ -55,10 +58,19 @@ class MapActivity : ComponentActivity() {
                                 LocationHelper(this)
                             ),
                             WeatherRepoImp.getInstance(
-                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                WeatherLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        this
+                                    ).weatherDao())
                             ),
                             ForecastsRepoImp.getInstance(
-                                RemoteDataSourceImp(RetrofitHelper.apiService)
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                ForecastsLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        this
+                                    ).weatherDao()
+                                )
                             )
                         )
                     )

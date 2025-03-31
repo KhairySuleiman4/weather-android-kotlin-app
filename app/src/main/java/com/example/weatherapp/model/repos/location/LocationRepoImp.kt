@@ -22,11 +22,9 @@ class LocationRepoImp(private val helper: LocationHelper): LocationRepo {
         }
     }
 
-    override fun getCurrentLocation(){
-        helper.getCurrentLocation()
-    }
+    override fun getCurrentLocation() = helper.getCurrentLocation()
 
-    override fun arePermissionsAllowed(): Boolean {
-        return helper.arePermissionsAllowed()
-    }
+    override fun arePermissionsAllowed() = helper.arePermissionsAllowed()
+
+    override fun isInternetAvailable() = helper.isInternetAvailable()
 }

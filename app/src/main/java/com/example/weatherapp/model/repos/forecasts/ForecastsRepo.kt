@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ForecastsRepo {
     suspend fun getForecastDetails(lat: Double, long: Double): Flow<List<WeatherForecast>>
+    fun getForecastsForHome(): Flow<List<WeatherForecast>>
 }

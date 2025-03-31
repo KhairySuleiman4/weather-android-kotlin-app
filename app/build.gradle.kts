@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -75,4 +76,10 @@ dependencies {
     //Retrofit
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    //Room db
+    implementation(libs.androidx.room.runtime)
+    // Kotlin Symbol Processing (KSP)
+    ksp(libs.androidx.room.compiler)
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
 }

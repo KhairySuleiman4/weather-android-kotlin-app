@@ -1,6 +1,9 @@
 package com.example.weatherapp.screens.home
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,6 +12,7 @@ import com.example.weatherapp.model.pojos.Response
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.repos.AppRepoImp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,8 +60,7 @@ class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
     fun refreshHome(){
         viewModelScope.launch {
             mutableIsRefreshing.value = true
-            getWeatherDetails()
-            getForecastDetails()
+            getWeatherAndForecastDetails()
             mutableIsRefreshing.value = false
         }
     }
@@ -87,36 +90,47 @@ class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
         mutableLong.value = repo.readLatLong().first().second
     }
 
-    fun getWeatherDetails() = runBlocking{
-        try{
-            repo.getWeatherDetails(lat.value.toDouble(), long.value.toDouble())
-                .catch { ex ->
+    fun getWeatherAndForecastDetails() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if(repo.isInternetAvailable()) {
+                try {
+                    val weatherData = repo.getWeatherDetails(lat.value.toDouble(), long.value.toDouble()).first()
+                    mutableWeatherDetails.value = Response.Success(weatherData)
+
+                    val forecastData = repo.getForecastDetails(lat.value.toDouble(), long.value.toDouble()).first()
+                    mutableForecastDetails.value = Response.Success(forecastData)
+
+                    repo.updateHome(weatherData, forecastData)
+                } catch (ex: Exception) {
                     mutableWeatherDetails.value = Response.Failure(ex)
-                    mutableToastEvent.emit("Error from API: ${ex.message}")
+                    mutableForecastDetails.value = Response.Failure(ex)
+                    mutableToastEvent.emit("Error: ${ex.message}")
                 }
-                .collect{
-                    mutableWeatherDetails.value = Response.Success(it)
+            } else {
+                viewModelScope.launch {
+                    getWeatherDetailsFromDatabase()
                 }
-        } catch (th: Throwable){
-            mutableWeatherDetails.value = Response.Failure(th)
-            mutableToastEvent.emit("Error: ${th.message}")
+                getForecastDetailsFromDatabase()
+            }
         }
     }
 
-    fun getForecastDetails() = runBlocking {
-        try{
-            repo.getForecastDetails(lat.value.toDouble(), long.value.toDouble())
-                .catch { ex ->
-                    mutableForecastDetails.value = Response.Failure(ex)
-                    mutableToastEvent.emit("Error from API: ${ex.message}")
-                }
-                .collect{
-                    mutableForecastDetails.value = Response.Success(it)
-                }
-        } catch (th: Throwable){
-            mutableForecastDetails.value = Response.Failure(th)
-            mutableToastEvent.emit("Error: ${th.message}")
-        }
+    private suspend fun getWeatherDetailsFromDatabase(){
+        repo.getWeatherDetailsForHome()
+            .catch { ex ->
+                mutableWeatherDetails.value = Response.Failure(ex)
+                mutableToastEvent.emit("Error from API: ${ex.message}")
+            }
+            .collect{ mutableWeatherDetails.value = Response.Success(it) }
+    }
+
+    private suspend fun getForecastDetailsFromDatabase(){
+        repo.getForecastsForHome()
+            .catch { ex ->
+                mutableForecastDetails.value = Response.Failure(ex)
+                mutableToastEvent.emit("Error from API: ${ex.message}")
+            }
+            .collect{ mutableForecastDetails.value = Response.Success(it) }
     }
 }
 

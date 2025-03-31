@@ -80,8 +80,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
         val bothGranted = permissions.all { it.value }
         if (bothGranted) {
             viewModel.getCurrentLocation()
-            viewModel.getWeatherDetails()
-            viewModel.getForecastDetails()
+            viewModel.getWeatherAndForecastDetails()
         } else
             Toast.makeText(context, deny, Toast.LENGTH_SHORT).show()
     }
@@ -98,13 +97,11 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 )
             } else {
                 viewModel.getCurrentLocation()
-                viewModel.getWeatherDetails()
-                viewModel.getForecastDetails()
+                viewModel.getWeatherAndForecastDetails()
             }
         } else {
             viewModel.getLocationFromDataStore()
-            viewModel.getWeatherDetails()
-            viewModel.getForecastDetails()
+            viewModel.getWeatherAndForecastDetails()
         }
     }
 

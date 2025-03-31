@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Looper
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -51,5 +53,12 @@ class LocationHelper(private val context: Context) {
         } else {
             Toast.makeText(context, "Location permission not granted", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun isInternetAvailable(): Boolean {
+        val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
+        val network = connectivityManager.activeNetwork
+        val capabilities = connectivityManager.getNetworkCapabilities(network)
+        return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

@@ -57,6 +57,12 @@ class AppRepoImp(
 
     override fun areLocationPermissionsGranted() = locationRepo.arePermissionsAllowed()
 
+    override fun isInternetAvailable() = locationRepo.isInternetAvailable()
+
+    override fun getWeatherDetailsForHome() = weatherRepo.getWeatherDetailsForHome()
+
+    override fun getForecastsForHome() = forecastRepo.getForecastsForHome()
+
     override suspend fun getWeatherDetails(lat: Double, long: Double) = weatherRepo.getWeatherDetails(lat, long)
 
     override suspend fun getForecastDetails(lat: Double, long: Double) = forecastRepo.getForecastDetails(lat, long)
@@ -70,4 +76,11 @@ class AppRepoImp(
     override suspend fun writeWindSpeedUnit(wind: String) = settingsRepo.writeWindSpeedUnit(wind)
 
     override suspend fun writeLatLong(lat: Double, long: Double) = settingsRepo.writeLatLong(lat, long)
+
+    override suspend fun updateHome(
+        weatherDetails: WeatherDetails,
+        forecasts: List<WeatherForecast>
+    ) {
+        weatherRepo.updateHome(weatherDetails, forecasts)
+    }
 }

@@ -18,6 +18,7 @@ data class ForecastItem(
 fun ForecastItem.toWeatherForecast(): WeatherForecast{
     return WeatherForecast(
         temp = main.temp.toInt(),
+        isFav = false,
         cityId = 0,
         dt = dt_txt,
         icon = weather[0].icon
