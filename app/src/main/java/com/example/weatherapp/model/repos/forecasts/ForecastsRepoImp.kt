@@ -26,5 +26,15 @@ class ForecastsRepoImp(private val remote: RemoteDataSource, private val local: 
 
     override suspend fun getForecastDetails(lat: Double, long: Double) = remote.getForecastDetails(lat, long)
 
+    override suspend fun insertForecastsToDatabase(forecasts: List<WeatherForecast>) {
+        local.insertForecasts(forecasts)
+    }
+
     override fun getForecastsForHome() = local.getForecastsForHome()
+
+    override fun getFavoriteForecasts() = local.getFavoriteForecasts()
+
+    override suspend fun deleteFavoriteCityForecasts(cityId: Int) {
+        local.deleteFavoriteCityForecasts(cityId)
+    }
 }

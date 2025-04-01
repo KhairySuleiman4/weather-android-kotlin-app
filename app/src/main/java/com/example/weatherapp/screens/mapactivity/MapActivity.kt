@@ -2,6 +2,7 @@ package com.example.weatherapp.screens.mapactivity
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -46,8 +47,10 @@ import com.google.maps.android.compose.rememberMarkerState
 class MapActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val caller = intent.getStringExtra("caller")
         setContent {
             MapUI(
+                caller,
                 viewModel(
                     factory = MapFactory(
                         AppRepoImp.getInstance(
@@ -81,9 +84,9 @@ class MapActivity : ComponentActivity() {
 }
 
 @Composable
-fun MapUI(viewModel: MapViewModel) {
+fun MapUI(caller: String?, viewModel: MapViewModel) {
     var markerPosition by remember { mutableStateOf<LatLng?>(null) }
-    val cameraPositionState = rememberCameraPositionState() // change the default to be the current location
+    val cameraPositionState = rememberCameraPositionState()
     val showSaveButton = remember { mutableStateOf(false) }
     val markerState = rememberMarkerState()
     val context = LocalContext.current
@@ -120,7 +123,11 @@ fun MapUI(viewModel: MapViewModel) {
                     .align(Alignment.BottomCenter)
                     .padding(horizontal = 50.dp, vertical = 16.dp),
                 onClick = {
-                    viewModel.saveCoordinatesToDataStore(lat.doubleValue, long.doubleValue)
+                    if(caller == "settings"){
+                        viewModel.saveCoordinatesToDataStore(lat.doubleValue, long.doubleValue)
+                    } else{
+                        viewModel.getWeatherAndForecastForFavoriteAndInsertThemToDatabase(lat.doubleValue, long.doubleValue)
+                    }
                     (context as? Activity)?.finish()
                 }
             ){

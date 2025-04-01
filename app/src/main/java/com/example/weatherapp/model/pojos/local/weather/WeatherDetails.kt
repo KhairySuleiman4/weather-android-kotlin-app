@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class WeatherDetails(
     @PrimaryKey
     val cityId: Int,
-    val isFav: Boolean,
+    var isFav: Boolean,
     val lastUpdate: String,
     val lon: Double,
     val lat: Double,

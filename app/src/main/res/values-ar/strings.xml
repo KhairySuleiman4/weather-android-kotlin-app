@@ -31,4 +31,5 @@
     <string name="status_icon">أيقونة لحالة الطقس</string>
     <string name="today">اليوم</string>
     <string name="five_day_forecast">طقس الأيام الخمسة القادمة</string>
+    <string name="favorite_cities">المدن المفضلة</string>
 </resources>

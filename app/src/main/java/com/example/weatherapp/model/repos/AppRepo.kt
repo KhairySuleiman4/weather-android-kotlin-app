@@ -15,6 +15,7 @@ interface AppRepo {
     fun isInternetAvailable(): Boolean
     fun getWeatherDetailsForHome(): Flow<WeatherDetails>
     fun getForecastsForHome(): Flow<List<WeatherForecast>>
+    fun getFavoriteWeatherDetails(): Flow<List<WeatherDetails>>
 
     suspend fun getWeatherDetails(lat: Double, long: Double): Flow<WeatherDetails>
     suspend fun getForecastDetails(lat: Double, long: Double): Flow<List<WeatherForecast>>
@@ -24,4 +25,8 @@ interface AppRepo {
     suspend fun writeWindSpeedUnit(wind: String)
     suspend fun writeLatLong(lat: Double, long: Double)
     suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>)
+    suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails)
+    suspend fun insertForecastsToDatabase(forecasts: List<WeatherForecast>)
+    suspend fun deleteFavoriteCityWeather(cityId: Int)
+    suspend fun deleteFavoriteCityForecasts(cityId: Int)
 }

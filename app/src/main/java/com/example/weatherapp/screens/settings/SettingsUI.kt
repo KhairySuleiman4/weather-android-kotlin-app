@@ -213,8 +213,11 @@ fun SettingsItem(
                                 selected = (option == selectedOption),
                                 onClick = {
                                     onOptionSelected(option)
-                                    if(option == mapString)
-                                        context.startActivity(Intent(context, MapActivity::class.java))
+                                    if(option == mapString){
+                                        val toMapActivity = Intent(context, MapActivity::class.java)
+                                        toMapActivity.putExtra("caller", "settings")
+                                        context.startActivity(toMapActivity)
+                                    }
                                 },
                                 role = Role.RadioButton
                             ),

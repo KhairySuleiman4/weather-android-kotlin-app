@@ -28,6 +28,7 @@ import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.repos.weather.WeatherRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.screens.alarms.AlarmsScreen
+import com.example.weatherapp.screens.favorite.FavoriteFactory
 import com.example.weatherapp.screens.favorite.FavoriteScreen
 import com.example.weatherapp.screens.home.HomeFactory
 import com.example.weatherapp.screens.home.HomeScreen
@@ -97,7 +98,35 @@ fun NavHostContainer(
             )
         }
         composable("favorite") {
-            FavoriteScreen()
+            FavoriteScreen(
+                viewModel(
+                    factory = FavoriteFactory(
+                        AppRepoImp.getInstance(
+                            SettingsRepoImp.getInstance(
+                                SettingsHelper(context)
+                            ),
+                            LocationRepoImp.getInstance(
+                                LocationHelper(context)
+                            ),
+                            WeatherRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                WeatherLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao())
+                            ),
+                            ForecastsRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                ForecastsLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao()
+                                )
+                            )
+                        )
+                    )
+                )
+            )
         }
         composable("alarms") {
             AlarmsScreen()

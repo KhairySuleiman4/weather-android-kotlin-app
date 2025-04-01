@@ -63,6 +63,8 @@ class AppRepoImp(
 
     override fun getForecastsForHome() = forecastRepo.getForecastsForHome()
 
+    override fun getFavoriteWeatherDetails() = weatherRepo.getFavoriteWeatherDetails()
+
     override suspend fun getWeatherDetails(lat: Double, long: Double) = weatherRepo.getWeatherDetails(lat, long)
 
     override suspend fun getForecastDetails(lat: Double, long: Double) = forecastRepo.getForecastDetails(lat, long)
@@ -82,5 +84,21 @@ class AppRepoImp(
         forecasts: List<WeatherForecast>
     ) {
         weatherRepo.updateHome(weatherDetails, forecasts)
+    }
+
+    override suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails) {
+        weatherRepo.insertWeatherDetailsToDatabase(weatherDetails)
+    }
+
+    override suspend fun insertForecastsToDatabase(forecasts: List<WeatherForecast>) {
+        forecastRepo.insertForecastsToDatabase(forecasts)
+    }
+
+    override suspend fun deleteFavoriteCityWeather(cityId: Int) {
+        weatherRepo.deleteFavoriteCityWeather(cityId)
+    }
+
+    override suspend fun deleteFavoriteCityForecasts(cityId: Int) {
+        forecastRepo.deleteFavoriteCityForecasts(cityId)
     }
 }

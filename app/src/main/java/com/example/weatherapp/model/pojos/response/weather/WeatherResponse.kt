@@ -32,22 +32,3 @@ fun WeatherResponse.toWeatherDetails(): WeatherDetails {
         lastUpdate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(Date())
     )
 }
-
-/*
-val cityId: Int,
-val lon: Double,
-val lat: Double,
-val temp: Double,
-val humidity: Int,
-val wind: Double,
-val pressure: Int,
-val clouds: Int,
-val cityName: String,
-val icon: String,
-val description: String
-val isFav: Boolean,
-val lastUpdate: String,
-*/
-
-
-

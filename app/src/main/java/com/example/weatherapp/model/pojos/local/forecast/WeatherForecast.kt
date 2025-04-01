@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class WeatherForecast(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val isFav: Boolean,
+    var isFav: Boolean,
     var cityId: Int,    // Foreign Key (linked to WeatherDetails)
     val dt: String,
     var temp: Int,

@@ -53,6 +53,7 @@ import com.example.weatherapp.model.settingshelper.toMilePerHour
 import com.example.weatherapp.model.settingshelper.translateWeatherDescription
 import com.example.weatherapp.ui.theme.Background
 import com.example.weatherapp.ui.theme.Night
+import com.example.weatherapp.ui.theme.Primary
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -118,7 +119,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Night)
+                .background(Primary)
         ) {
             when (val weatherResponse = weatherState.value) {
                 is Response.Loading -> {

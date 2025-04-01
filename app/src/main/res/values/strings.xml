@@ -31,4 +31,5 @@
     <string name="status_icon">Weather Status Icon</string>
     <string name="today">Today</string>
     <string name="five_day_forecast">5-day Forecast</string>
+    <string name="favorite_cities">Favorite Cities</string>
 </resources>
