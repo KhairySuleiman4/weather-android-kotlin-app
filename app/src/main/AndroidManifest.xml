@@ -18,6 +18,11 @@
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="31">
         <activity
+            android:name=".screens.favoritedetails.FavoriteDetails"
+            android:exported="false"
+            android:label="@string/title_activity_favorite_details"
+            android:theme="@style/Theme.WeatherApp" />
+        <activity
             android:name=".screens.mapactivity.MapActivity"
             android:exported="false"
             android:label="@string/title_activity_map"

@@ -1,12 +1,10 @@
 package com.example.weatherapp.screens.favorite
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.repos.AppRepoImp
-import com.example.weatherapp.screens.settings.SettingsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,14 +15,17 @@ class FavoriteViewModel(private val repo: AppRepoImp) : ViewModel() {
 
     private val mutableFavCities = MutableStateFlow<List<WeatherDetails>>(emptyList())
     val favCities: StateFlow<List<WeatherDetails>> = mutableFavCities.asStateFlow()
+    private val mutableIsConnected = MutableStateFlow(false)
+    val isConnected = mutableIsConnected.asStateFlow()
 
     init {
         getFavCities()
+        isConnectedToInternet()
     }
 
     private fun getFavCities() {
         viewModelScope.launch {
-            repo.getFavoriteWeatherDetails()
+            repo.getAllFavoriteWeatherDetails()
                 .collect {
                     mutableFavCities.value = it
                 }
@@ -38,6 +39,10 @@ class FavoriteViewModel(private val repo: AppRepoImp) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             repo.deleteFavoriteCityForecasts(id)
         }
+    }
+
+    fun isConnectedToInternet(){
+        mutableIsConnected.value = repo.isInternetAvailable()
     }
 }
 

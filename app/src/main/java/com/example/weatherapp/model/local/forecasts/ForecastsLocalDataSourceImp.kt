@@ -27,7 +27,7 @@ class ForecastsLocalDataSourceImp private constructor(private val dao: WeatherDa
 
     override fun getForecastsForHome() = dao.getForecastsForHome()
 
-    override fun getFavoriteForecasts() = dao.getFavoriteForecasts()
+    override fun getFavoriteForecasts(cityId: Int) = dao.getFavoriteForecasts(cityId)
 
     override suspend fun deleteFavoriteCityForecasts(cityId: Int) {
         dao.deleteFavoriteCityForecasts(cityId)

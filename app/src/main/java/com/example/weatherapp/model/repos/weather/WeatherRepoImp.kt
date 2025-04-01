@@ -28,7 +28,7 @@ class WeatherRepoImp(private val remote: RemoteDataSource, private val local: We
 
     override fun getWeatherDetailsForHome() = local.getWeatherDetailsForHome()
 
-    override fun getFavoriteWeatherDetails() = local.getFavoriteWeatherDetails()
+    override fun getAllFavoriteWeatherDetails() = local.getAllFavoriteWeatherDetails()
 
     override suspend fun deleteFavoriteCityWeather(cityId: Int) {
         local.deleteFavoriteCityWeather(cityId)
@@ -44,4 +44,6 @@ class WeatherRepoImp(private val remote: RemoteDataSource, private val local: We
     override suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails) {
         local.insertWeatherDetails(weatherDetails)
     }
+
+    override fun getFavoriteWeatherDetails(cityId: Int) = local.getFavoriteWeatherDetails(cityId)
 }

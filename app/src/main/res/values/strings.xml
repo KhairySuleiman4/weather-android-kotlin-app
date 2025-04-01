@@ -32,4 +32,6 @@
     <string name="today">Today</string>
     <string name="five_day_forecast">5-day Forecast</string>
     <string name="favorite_cities">Favorite Cities</string>
+    <string name="title_activity_favorite_details" translatable="false">FavoriteDetails</string>
+    <string name="connect_to_internet">Connect to Internet to Enable this Feature</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.example.weatherapp.model.pojos.local.forecast
 
-//need room dependencies
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

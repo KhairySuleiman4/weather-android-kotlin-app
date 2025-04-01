@@ -17,6 +17,12 @@ class SettingsViewModel(private val repo: AppRepoImp) : ViewModel(){
     val location = mutableLocation.asStateFlow()
     private val mutableWind = MutableStateFlow("m/s")
     val wind = mutableWind.asStateFlow()
+    private val mutableIsConnected = MutableStateFlow(false)
+    val isConnected = mutableIsConnected.asStateFlow()
+
+    init {
+        isConnectedToInternet()
+    }
 
     fun saveSettings(language: String, temp: String, location: String, wind: String){
         viewModelScope.launch {
@@ -53,6 +59,10 @@ class SettingsViewModel(private val repo: AppRepoImp) : ViewModel(){
                 mutableWind.value = it
             }
         }
+    }
+
+    fun isConnectedToInternet(){
+        mutableIsConnected.value = repo.isInternetAvailable()
     }
 }
 

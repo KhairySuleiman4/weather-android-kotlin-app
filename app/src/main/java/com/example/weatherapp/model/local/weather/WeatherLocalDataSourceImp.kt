@@ -3,6 +3,7 @@ package com.example.weatherapp.model.local.weather
 import com.example.weatherapp.model.local.WeatherDao
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
+import kotlinx.coroutines.flow.Flow
 
 class WeatherLocalDataSourceImp private constructor(private val dao: WeatherDao): WeatherLocalDataSource {
     companion object{
@@ -23,7 +24,9 @@ class WeatherLocalDataSourceImp private constructor(private val dao: WeatherDao)
 
     override fun getWeatherDetailsForHome() = dao.getWeatherDetailsForHome()
 
-    override fun getFavoriteWeatherDetails() = dao.getFavoriteWeatherDetails()
+    override fun getAllFavoriteWeatherDetails() = dao.getAllFavoriteWeatherDetails()
+
+    override fun getFavoriteWeatherDetails(cityId: Int) = dao.getFavoriteWeatherDetails(cityId)
 
     override suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>) {
         dao.updateHome(weatherDetails, forecasts)

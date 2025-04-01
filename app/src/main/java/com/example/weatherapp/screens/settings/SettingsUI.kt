@@ -1,6 +1,7 @@
 package com.example.weatherapp.screens.settings
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +46,7 @@ import com.example.weatherapp.ui.theme.Primary
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel) {
-
+    viewModel.isConnectedToInternet()
     LaunchedEffect(Unit) {
         viewModel.getSavedSettings()
     }
@@ -54,6 +55,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     val savedTemp by viewModel.temp.collectAsState()
     val savedLocation by viewModel.location.collectAsState()
     val savedWind by viewModel.wind.collectAsState()
+    val isConnected = viewModel.isConnected.collectAsState()
 
     var selectedLanguage by remember(savedLanguage) { mutableStateOf(savedLanguage) }
     var selectedTempUnit by remember(savedTemp) { mutableStateOf(savedTemp) }
@@ -110,7 +112,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         R.string.language,
                         langOptions,
                         selectedOption = selectedLanguage,
-                        onOptionSelected = { selectedLanguage = it }
+                        onOptionSelected = { selectedLanguage = it },
+                        isConnected.value
                     )
                 }
                 item {
@@ -119,7 +122,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         R.string.temp_unit,
                         tempOptions,
                         selectedOption = selectedTempUnit,
-                        onOptionSelected = { selectedTempUnit = it }
+                        onOptionSelected = { selectedTempUnit = it },
+                        isConnected.value
                     )
                 }
                 item {
@@ -128,7 +132,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         R.string.location,
                         locationOptions,
                         selectedOption = selectedLocation,
-                        onOptionSelected = { selectedLocation = it }
+                        onOptionSelected = { selectedLocation = it },
+                        isConnected.value
                     )
                 }
                 item {
@@ -137,7 +142,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         R.string.wind_unit,
                         listOf(mps, mph),
                         selectedOption = selectedWindSpeedUnit,
-                        onOptionSelected = {}
+                        onOptionSelected = {},
+                        isConnected.value
                     )
                 }
             }
@@ -166,7 +172,8 @@ fun SettingsItem(
     titleRes: Int,
     options: List<String>,
     selectedOption: String? = null,
-    onOptionSelected: (String) -> Unit = {}
+    onOptionSelected: (String) -> Unit = {},
+    isConnected: Boolean
 ) {
     val mapString = stringResource(R.string.map)
     val context = LocalContext.current
@@ -214,9 +221,13 @@ fun SettingsItem(
                                 onClick = {
                                     onOptionSelected(option)
                                     if(option == mapString){
-                                        val toMapActivity = Intent(context, MapActivity::class.java)
-                                        toMapActivity.putExtra("caller", "settings")
-                                        context.startActivity(toMapActivity)
+                                        if(isConnected){
+                                            val toMapActivity = Intent(context, MapActivity::class.java)
+                                            toMapActivity.putExtra("caller", "settings")
+                                            context.startActivity(toMapActivity)
+                                        } else{
+                                            Toast.makeText(context, R.string.connect_to_internet, Toast.LENGTH_SHORT).show()
+                                        }
                                     }
                                 },
                                 role = Role.RadioButton

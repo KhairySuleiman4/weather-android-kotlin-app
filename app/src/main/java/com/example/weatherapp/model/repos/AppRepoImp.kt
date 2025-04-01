@@ -63,7 +63,11 @@ class AppRepoImp(
 
     override fun getForecastsForHome() = forecastRepo.getForecastsForHome()
 
-    override fun getFavoriteWeatherDetails() = weatherRepo.getFavoriteWeatherDetails()
+    override fun getAllFavoriteWeatherDetails() = weatherRepo.getAllFavoriteWeatherDetails()
+
+    override fun getFavoriteWeatherDetails(cityId: Int) = weatherRepo.getFavoriteWeatherDetails(cityId)
+
+    override fun getFavoriteForecasts(cityId: Int) = forecastRepo.getFavoriteForecasts(cityId)
 
     override suspend fun getWeatherDetails(lat: Double, long: Double) = weatherRepo.getWeatherDetails(lat, long)
 

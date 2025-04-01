@@ -68,6 +68,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     val weatherState = viewModel.weatherDetails.collectAsState()
     val forecastState = viewModel.forecastDetails.collectAsState()
     val time = viewModel.dateAndTimeToBeDisplayed.collectAsState()
+    val isRefreshing = viewModel.isRefreshing.collectAsState()
     val settings = hashMapOf(
         "Language" to viewModel.lang,
         "Temperature" to viewModel.temp,
@@ -113,7 +114,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     }
 
     PullToRefreshBox(
-        isRefreshing = viewModel.isRefreshing.value,
+        isRefreshing = isRefreshing.value,
         onRefresh = { viewModel.refreshHome() }
     ) {
         LazyColumn(

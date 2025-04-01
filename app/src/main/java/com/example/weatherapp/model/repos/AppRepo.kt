@@ -15,7 +15,9 @@ interface AppRepo {
     fun isInternetAvailable(): Boolean
     fun getWeatherDetailsForHome(): Flow<WeatherDetails>
     fun getForecastsForHome(): Flow<List<WeatherForecast>>
-    fun getFavoriteWeatherDetails(): Flow<List<WeatherDetails>>
+    fun getAllFavoriteWeatherDetails(): Flow<List<WeatherDetails>>
+    fun getFavoriteWeatherDetails(cityId: Int): Flow<WeatherDetails>
+    fun getFavoriteForecasts(cityId: Int): Flow<List<WeatherForecast>>
 
     suspend fun getWeatherDetails(lat: Double, long: Double): Flow<WeatherDetails>
     suspend fun getForecastDetails(lat: Double, long: Double): Flow<List<WeatherForecast>>

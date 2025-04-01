@@ -8,7 +8,8 @@ interface WeatherRepo {
     suspend fun getWeatherDetails(lat: Double, long: Double): Flow<WeatherDetails>
     suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>)
     suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails)
+    fun getFavoriteWeatherDetails(cityId: Int): Flow<WeatherDetails>
     fun getWeatherDetailsForHome(): Flow<WeatherDetails>
-    fun getFavoriteWeatherDetails(): Flow<List<WeatherDetails>>
+    fun getAllFavoriteWeatherDetails(): Flow<List<WeatherDetails>>
     suspend fun deleteFavoriteCityWeather(cityId: Int)
 }

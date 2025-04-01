@@ -1,7 +1,9 @@
 package com.example.weatherapp.screens.favorite
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,14 +35,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
+import com.example.weatherapp.screens.favoritedetails.FavoriteDetails
 import com.example.weatherapp.screens.mapactivity.MapActivity
 import com.example.weatherapp.ui.theme.Background
 import com.example.weatherapp.ui.theme.Primary
 
 @Composable
 fun FavoriteScreen(viewModel: FavoriteViewModel) {
+    viewModel.isConnectedToInternet()
     val context = LocalContext.current
     val favCities = viewModel.favCities.collectAsState()
+    val isConnected = viewModel.isConnected.collectAsState()
 
     Box(
         modifier = Modifier
@@ -58,9 +63,19 @@ fun FavoriteScreen(viewModel: FavoriteViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(favCities.value.size) {
-                    FavCity(favCities.value[it]){ city ->
-                        viewModel.deleteCity(city.cityId)
-                    }
+                    FavCity(
+                        weatherDetails = favCities.value[it],
+                        onDeleteClick = { city ->
+                            viewModel.deleteCity(city.cityId)
+                        },
+                        onCityClick = { city ->
+                            val toFavDetails = Intent(context, FavoriteDetails::class.java)
+                            toFavDetails.putExtra("lat", city.lat)
+                            toFavDetails.putExtra("long", city.lon)
+                            toFavDetails.putExtra("id", city.cityId)
+                            context.startActivity(toFavDetails)
+                        }
+                    )
                 }
             }
         }
@@ -70,9 +85,13 @@ fun FavoriteScreen(viewModel: FavoriteViewModel) {
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
             onClick = {
-                context.startActivity(
-                    Intent(context, MapActivity::class.java).putExtra("caller", "favorite")
-                )
+                if(isConnected.value){
+                    context.startActivity(
+                        Intent(context, MapActivity::class.java).putExtra("caller", "favorite")
+                    )
+                } else{
+                    Toast.makeText(context, R.string.connect_to_internet, Toast.LENGTH_SHORT).show()
+                }
             }
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add city to favorites")
@@ -81,12 +100,13 @@ fun FavoriteScreen(viewModel: FavoriteViewModel) {
 }
 
 @Composable
-fun FavCity(weatherDetails: WeatherDetails, onDeleteClick: (WeatherDetails) -> Unit) {
+fun FavCity(weatherDetails: WeatherDetails, onDeleteClick: (WeatherDetails) -> Unit, onCityClick: (WeatherDetails) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
-            .height(60.dp),
+            .height(60.dp)
+            .clickable { onCityClick(weatherDetails) },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(Background)
     ) {
