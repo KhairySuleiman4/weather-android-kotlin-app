@@ -3,7 +3,6 @@ package com.example.weatherapp.model.local.weather
 import com.example.weatherapp.model.local.WeatherDao
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
-import kotlinx.coroutines.flow.Flow
 
 class WeatherLocalDataSourceImp private constructor(private val dao: WeatherDao): WeatherLocalDataSource {
     companion object{

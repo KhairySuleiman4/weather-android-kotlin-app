@@ -73,13 +73,43 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
-    //Retrofit
+    // Retrofit
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
-    //Room db
+    // Room db
     implementation(libs.androidx.room.runtime)
     // Kotlin Symbol Processing (KSP)
     ksp(libs.androidx.room.compiler)
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    // Local Unit Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.hamcrest:hamcrest-all:1.3")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.robolectric:robolectric:4.5.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    // AndroidX Test - JVM testing
+    testImplementation("androidx.test:core-ktx:1.6.1")
+    //testImplementation "androidx.test.ext:junit:1.1.3"
+    // AndroidX Test - Instrumented testing
+    androidTestImplementation("androidx.test:core:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    //Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
+    // hamcrest
+    testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation("org.hamcrest:hamcrest-library:2.2")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
+    androidTestImplementation("org.hamcrest:hamcrest-library:2.2")
+    // AndroidX and Robolectric
+    testImplementation("androidx.test.ext:junit-ktx:1.1.3")
+    testImplementation("androidx.test:core-ktx:1.6.1")
+    testImplementation("org.robolectric:robolectric:4.11")
+    //MockK
+    testImplementation("io.mockk:mockk-android:1.13.17")
+    testImplementation("io.mockk:mockk-agent:1.13.17")
 }

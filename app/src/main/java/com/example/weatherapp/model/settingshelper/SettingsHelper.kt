@@ -13,6 +13,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.weatherapp.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 
 private val Context.dataStore by preferencesDataStore("settings_prefs")
 
@@ -82,7 +83,6 @@ class SettingsHelper(private val context: Context){
     suspend fun writeLatLong(lat: Double, long: Double){
         context.dataStore.edit {
             it[LAT_LONG_KEY] = "$lat,$long"
-            Log.i("SettingsHelper", "writeLatLong: $lat,$long")
         }
     }
 
@@ -93,7 +93,19 @@ class SettingsHelper(private val context: Context){
                 LocaleList.forLanguageTags(languageCode)
         } else {
             //version < 13
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
+            setAppLocale(languageCode, context)
         }
+    }
+
+    private fun setAppLocale(languageCode: String, context: Context) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        config.setLayoutDirection(locale)
+
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 }

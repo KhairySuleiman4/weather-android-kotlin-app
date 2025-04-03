@@ -86,7 +86,6 @@ class FavoriteDetails : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteDetailsUI(lat: Double, long: Double, id: Int, viewModel: FavoriteDetailsViewModel){
-    val context = LocalContext.current
     val weatherState = viewModel.weatherDetails.collectAsState()
     val forecastState = viewModel.forecastDetails.collectAsState()
     val time = viewModel.dateAndTimeToBeDisplayed.collectAsState()
