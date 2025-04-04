@@ -37,8 +37,8 @@ fun formatDateBasedOnLocale(dateString: String): String {
 }
 
 fun translateWeatherDescription(desc: String): String{
-    return if (Locale.getDefault() == Locale.ENGLISH){
-        desc
+    return if (Locale.getDefault() == Locale.US || Locale.getDefault() == Locale.UK){
+        return desc
     } else{
         when(desc){
             "thunderstorm with light rain", "thunderstorm with light drizzle" -> "عاصفة رعدية مع أمطار خفيفة"

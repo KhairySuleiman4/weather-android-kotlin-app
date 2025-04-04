@@ -9,7 +9,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.weatherapp.model.notificationsworker.NotificationsWorker
 import com.example.weatherapp.model.pojos.local.Notification
-import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.repos.AppRepoImp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

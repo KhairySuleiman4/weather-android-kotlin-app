@@ -10,9 +10,7 @@ import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.repos.AppRepoImp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -25,9 +23,9 @@ class FavoriteDetailsViewModel(private val repo: AppRepoImp): ViewModel() {
     private val mutableLanguage = MutableStateFlow("English")
     val lang = mutableLanguage.asStateFlow()
     private val mutableTemp = MutableStateFlow("Kelvin K")
-    val temp = mutableTemp
+    val temp = mutableTemp.asStateFlow()
     private val mutableWind = MutableStateFlow("m/s")
-    val wind = mutableWind
+    val wind = mutableWind.asStateFlow()
 
     private val mutableWeatherDetails = MutableStateFlow<Response<WeatherDetails>>(Response.Loading)
     val weatherDetails = mutableWeatherDetails.asStateFlow()
@@ -36,7 +34,7 @@ class FavoriteDetailsViewModel(private val repo: AppRepoImp): ViewModel() {
     val forecastDetails = mutableForecastDetails.asStateFlow()
 
     private val mutableIsRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> = mutableIsRefreshing
+    val isRefreshing = mutableIsRefreshing.asStateFlow()
 
     @SuppressLint("SimpleDateFormat")
     private val mutableCurrentDateAndTime = MutableStateFlow(

@@ -1,6 +1,5 @@
 package com.example.weatherapp.model.settingshelper
 
-import android.app.Activity
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
@@ -34,7 +33,7 @@ class SettingsHelper(private val context: Context){
     }
 
     val location: Flow<String> = context.dataStore.data.map {
-        it[LOCATION_KEY] ?: "GPS"
+        it[LOCATION_KEY] ?: "Map"
     }
 
     val windSpeedUnit: Flow<String> = context.dataStore.data.map {

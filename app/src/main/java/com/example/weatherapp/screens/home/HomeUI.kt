@@ -64,16 +64,20 @@ import java.util.Locale
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
     val context = LocalContext.current
+    val lang = viewModel.lang.collectAsState()
+    val temp = viewModel.temp.collectAsState()
+    val location = viewModel.location.collectAsState()
+    val wind = viewModel.wind.collectAsState()
     val deny = stringResource(R.string.permission_denied)
     val weatherState = viewModel.weatherDetails.collectAsState()
     val forecastState = viewModel.forecastDetails.collectAsState()
     val time = viewModel.dateAndTimeToBeDisplayed.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
     val settings = hashMapOf(
-        "Language" to viewModel.lang,
-        "Temperature" to viewModel.temp,
-        "Location" to viewModel.location,
-        "Wind" to viewModel.wind
+        "Language" to lang.value,
+        "Temperature" to temp.value,
+        "Location" to location.value,
+        "Wind" to wind.value
     )
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -89,7 +93,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
 
     LaunchedEffect(Unit) {
         viewModel.getStoredSettings()
-        if (viewModel.location == "GPS") {
+        if (location.value == "GPS") {
             if (!viewModel.arePermissionsAllowed()) {
                 permissionLauncher.launch(
                     arrayOf(
@@ -161,7 +165,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
                     item {
                         ForecastDetailsUI(
                             forecastResponse.data,
-                            viewModel.temp,
+                            temp.value,
                             viewModel.currentDateAndTime.value,
                             viewModel.dateAndTimeToBeDisplayed.value.split(" ")[0]
                         )

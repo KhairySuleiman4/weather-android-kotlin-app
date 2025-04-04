@@ -4,7 +4,6 @@ import com.example.weatherapp.model.local.weather.WeatherLocalDataSource
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.remote.RemoteDataSource
-import kotlinx.coroutines.flow.Flow
 
 class WeatherRepoImp(private val remote: RemoteDataSource, private val local: WeatherLocalDataSource): WeatherRepo {
 

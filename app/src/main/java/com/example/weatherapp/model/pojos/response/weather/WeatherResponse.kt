@@ -25,7 +25,7 @@ fun WeatherResponse.toWeatherDetails(): WeatherDetails {
         wind = wind.speed,
         pressure = main.pressure,
         clouds = clouds.all,
-        cityName = name,
+        cityName = name.ifBlank { "No Where" },
         icon = weather[0].icon,
         description = weather[0].description,
         isFav = false,

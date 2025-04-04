@@ -2,7 +2,6 @@ package com.example.weatherapp.model.remote
 
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
-import com.example.weatherapp.model.pojos.response.forecast.ForecastResponse
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {

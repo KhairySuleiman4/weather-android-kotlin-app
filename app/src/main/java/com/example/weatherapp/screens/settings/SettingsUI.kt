@@ -57,10 +57,17 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     val savedWind by viewModel.wind.collectAsState()
     val isConnected = viewModel.isConnected.collectAsState()
 
-    var selectedLanguage by remember(savedLanguage) { mutableStateOf(savedLanguage) }
-    var selectedTempUnit by remember(savedTemp) { mutableStateOf(savedTemp) }
-    var selectedLocation by remember(savedLocation) { mutableStateOf(savedLocation) }
-    var selectedWindSpeedUnit by remember(savedWind) { mutableStateOf(savedWind) }
+    var selectedLanguage by remember { mutableStateOf(savedLanguage) }
+    var selectedTempUnit by remember { mutableStateOf(savedTemp) }
+    var selectedLocation by remember { mutableStateOf(savedLocation) }
+    var selectedWindSpeedUnit by remember { mutableStateOf(savedWind) }
+
+    LaunchedEffect(savedLanguage, savedTemp, savedLocation, savedWind) {
+        selectedLanguage = savedLanguage
+        selectedTempUnit = savedTemp
+        selectedLocation = savedLocation
+        selectedWindSpeedUnit = savedWind
+    }
 
     val kelvin = stringResource(R.string.kelvin)
     val celsius = stringResource(R.string.celsius)

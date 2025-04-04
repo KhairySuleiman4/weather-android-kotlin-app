@@ -8,7 +8,7 @@ data class WeatherForecast(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     var isFav: Boolean,
-    var cityId: Int,    // Foreign Key (linked to WeatherDetails)
+    var cityId: Int,
     val dt: String,
     var temp: Int,
     val icon: String

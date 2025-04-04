@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.weatherapp.R
 import com.example.weatherapp.model.local.WeatherDatabase
 import com.example.weatherapp.model.local.forecasts.ForecastsLocalDataSourceImp
 import com.example.weatherapp.model.local.weather.WeatherLocalDataSourceImp
@@ -23,8 +22,6 @@ import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.repos.weather.WeatherRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
 import com.example.weatherapp.screens.home.mapIconToResourceId
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull

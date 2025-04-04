@@ -7,7 +7,6 @@ import com.example.weatherapp.model.repos.forecasts.ForecastsRepoImp
 import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.repos.weather.WeatherRepoImp
-import kotlinx.coroutines.flow.Flow
 
 class AppRepoImp(
     private val settingsRepo: SettingsRepoImp,

@@ -1,7 +1,6 @@
 package com.example.weatherapp.model.repos.forecasts
 
 import com.example.weatherapp.model.local.forecasts.ForecastsLocalDataSource
-import com.example.weatherapp.model.local.weather.WeatherLocalDataSource
 import com.example.weatherapp.model.pojos.local.Notification
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.remote.RemoteDataSource

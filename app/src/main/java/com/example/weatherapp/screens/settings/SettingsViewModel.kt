@@ -13,7 +13,7 @@ class SettingsViewModel(private val repo: AppRepoImp) : ViewModel(){
     val language = mutableLanguage.asStateFlow()
     private val mutableTemp = MutableStateFlow("Kelvin K")
     val temp = mutableTemp.asStateFlow()
-    private val mutableLocation = MutableStateFlow("GPS")
+    private val mutableLocation = MutableStateFlow("Map")
     val location = mutableLocation.asStateFlow()
     private val mutableWind = MutableStateFlow("m/s")
     val wind = mutableWind.asStateFlow()

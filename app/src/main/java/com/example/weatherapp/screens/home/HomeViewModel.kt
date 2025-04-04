@@ -1,10 +1,6 @@
 package com.example.weatherapp.screens.home
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -28,10 +24,14 @@ import java.util.Date
 import java.util.Locale
 
 class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
-    var lang: String = "English"
-    var temp: String = "Kelvin K"
-    var location: String = "GPS"
-    var wind: String = "m/s"
+    private val mutableLang = MutableStateFlow("English")
+    val lang = mutableLang.asStateFlow()
+    private val mutableTemp = MutableStateFlow("Kelvin K")
+    val temp = mutableTemp.asStateFlow()
+    private val mutableLocation = MutableStateFlow("GPS")
+    val location = mutableLocation.asStateFlow()
+    private val mutableWind = MutableStateFlow("m/s")
+    val wind = mutableWind.asStateFlow()
 
     private val mutableLat = MutableStateFlow("0.0")
     val lat: StateFlow<String> = mutableLat.asStateFlow()
@@ -66,10 +66,10 @@ class HomeViewModel(private val repo: AppRepoImp) : ViewModel() {
     }
 
     fun getStoredSettings() = runBlocking {
-        lang = repo.readLanguageChoice().first()
-        temp = repo.readTemperatureUnit().first()
-        location = repo.readLocationChoice().first()
-        wind = repo.readWindSpeedUnit().first()
+        mutableLang.value = repo.readLanguageChoice().first()
+        mutableTemp.value = repo.readTemperatureUnit().first()
+        mutableLocation.value = repo.readLocationChoice().first()
+        mutableWind.value = repo.readWindSpeedUnit().first()
     }
 
     fun getCurrentLocation() {
