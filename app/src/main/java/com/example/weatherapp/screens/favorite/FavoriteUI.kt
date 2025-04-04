@@ -94,7 +94,7 @@ fun FavoriteScreen(viewModel: FavoriteViewModel) {
                 }
             }
         ) {
-            Icon(Icons.Filled.Add, contentDescription = "Add city to favorites")
+            Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_city))
         }
     }
 }

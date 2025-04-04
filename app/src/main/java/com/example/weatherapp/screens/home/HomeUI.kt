@@ -518,7 +518,7 @@ fun getIconsOfFiveDays(dailyList: MutableList<WeatherForecast>): List<Int> {
         }
 }
 
-private fun mapIconToResourceId(iconName: String): Int {
+fun mapIconToResourceId(iconName: String): Int {
     return when (iconName) {
         "01d" -> R.drawable._01d
         "01n" -> R.drawable._01n

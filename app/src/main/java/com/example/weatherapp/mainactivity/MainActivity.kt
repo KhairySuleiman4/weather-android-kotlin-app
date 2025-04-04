@@ -1,5 +1,6 @@
 package com.example.weatherapp.mainactivity
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -27,6 +27,7 @@ import com.example.weatherapp.model.repos.location.LocationRepoImp
 import com.example.weatherapp.model.repos.settings.SettingsRepoImp
 import com.example.weatherapp.model.repos.weather.WeatherRepoImp
 import com.example.weatherapp.model.settingshelper.SettingsHelper
+import com.example.weatherapp.screens.alarms.AlarmsFactory
 import com.example.weatherapp.screens.alarms.AlarmsScreen
 import com.example.weatherapp.screens.favorite.FavoriteFactory
 import com.example.weatherapp.screens.favorite.FavoriteScreen
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     BottomNavigationBar(navController = navController)
                 },
                 content = { padding ->
-                    NavHostContainer(navController = navController, padding = padding)
+                    NavHostContainer(navController = navController, padding = padding, context = this)
                 }
             )
         }
@@ -59,8 +60,8 @@ class MainActivity : ComponentActivity() {
 fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
+    context: Activity
 ) {
-    val context = LocalContext.current
     NavHost(
         navController = navController,
         startDestination = "home",
@@ -129,7 +130,35 @@ fun NavHostContainer(
             )
         }
         composable("alarms") {
-            AlarmsScreen()
+            AlarmsScreen(
+                viewModel(
+                    factory = AlarmsFactory(
+                        AppRepoImp.getInstance(
+                            SettingsRepoImp.getInstance(
+                                SettingsHelper(context)
+                            ),
+                            LocationRepoImp.getInstance(
+                                LocationHelper(context)
+                            ),
+                            WeatherRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                WeatherLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao())
+                            ),
+                            ForecastsRepoImp.getInstance(
+                                RemoteDataSourceImp(RetrofitHelper.apiService),
+                                ForecastsLocalDataSourceImp.getInstance(
+                                    WeatherDatabase.getInstance(
+                                        context
+                                    ).weatherDao()
+                                )
+                            )
+                        )
+                    )
+                )
+            )
         }
         composable("settings") {
             SettingsScreen(

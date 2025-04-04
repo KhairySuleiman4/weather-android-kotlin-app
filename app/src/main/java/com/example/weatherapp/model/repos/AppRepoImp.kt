@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.repos
 
+import com.example.weatherapp.model.pojos.local.Notification
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import com.example.weatherapp.model.repos.forecasts.ForecastsRepoImp
@@ -69,6 +70,8 @@ class AppRepoImp(
 
     override fun getFavoriteForecasts(cityId: Int) = forecastRepo.getFavoriteForecasts(cityId)
 
+    override fun getAllNotifications() = forecastRepo.getAllNotifications()
+
     override suspend fun getWeatherDetails(lat: Double, long: Double) = weatherRepo.getWeatherDetails(lat, long)
 
     override suspend fun getForecastDetails(lat: Double, long: Double) = forecastRepo.getForecastDetails(lat, long)
@@ -83,10 +86,7 @@ class AppRepoImp(
 
     override suspend fun writeLatLong(lat: Double, long: Double) = settingsRepo.writeLatLong(lat, long)
 
-    override suspend fun updateHome(
-        weatherDetails: WeatherDetails,
-        forecasts: List<WeatherForecast>
-    ) {
+    override suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>) {
         weatherRepo.updateHome(weatherDetails, forecasts)
     }
 
@@ -98,11 +98,19 @@ class AppRepoImp(
         forecastRepo.insertForecastsToDatabase(forecasts)
     }
 
+    override suspend fun insertNotification(notification: Notification) {
+        forecastRepo.insertNotification(notification)
+    }
+
     override suspend fun deleteFavoriteCityWeather(cityId: Int) {
         weatherRepo.deleteFavoriteCityWeather(cityId)
     }
 
     override suspend fun deleteFavoriteCityForecasts(cityId: Int) {
         forecastRepo.deleteFavoriteCityForecasts(cityId)
+    }
+
+    override suspend fun deleteNotification(time: Long) {
+        forecastRepo.deleteNotification(time)
     }
 }

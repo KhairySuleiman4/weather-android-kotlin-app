@@ -1,12 +1,10 @@
 package com.example.weatherapp.model.settingshelper
 
+import android.app.Activity
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
-import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore

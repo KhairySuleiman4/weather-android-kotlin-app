@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.repos
 
+import com.example.weatherapp.model.pojos.local.Notification
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,7 @@ interface AppRepo {
     fun getAllFavoriteWeatherDetails(): Flow<List<WeatherDetails>>
     fun getFavoriteWeatherDetails(cityId: Int): Flow<WeatherDetails>
     fun getFavoriteForecasts(cityId: Int): Flow<List<WeatherForecast>>
+    fun getAllNotifications(): Flow<List<Notification>>
 
     suspend fun getWeatherDetails(lat: Double, long: Double): Flow<WeatherDetails>
     suspend fun getForecastDetails(lat: Double, long: Double): Flow<List<WeatherForecast>>
@@ -29,6 +31,8 @@ interface AppRepo {
     suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>)
     suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails)
     suspend fun insertForecastsToDatabase(forecasts: List<WeatherForecast>)
+    suspend fun insertNotification(notification: Notification)
     suspend fun deleteFavoriteCityWeather(cityId: Int)
     suspend fun deleteFavoriteCityForecasts(cityId: Int)
+    suspend fun deleteNotification(time: Long)
 }

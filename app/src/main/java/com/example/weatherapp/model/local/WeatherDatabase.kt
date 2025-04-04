@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.weatherapp.model.pojos.local.Notification
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 
-@Database(entities = [WeatherDetails::class, WeatherForecast::class], version = 3)
+@Database(entities = [WeatherDetails::class, WeatherForecast::class, Notification::class], version = 4)
 abstract class WeatherDatabase: RoomDatabase() {
     abstract fun weatherDao(): WeatherDao
 

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.weatherapp.model.pojos.local.Notification
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 import kotlinx.coroutines.flow.Flow
@@ -22,11 +23,15 @@ interface WeatherDao {
     fun getFavoriteWeatherDetails(cityId: Int): Flow<WeatherDetails>
     @Query("Select * from weather_forecast where cityId = :cityId")
     fun getFavoriteForecasts(cityId: Int): Flow<List<WeatherForecast>>
+    @Query("select * from notifications")
+    fun getAllNotifications(): Flow<List<Notification>>
     // insert
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeatherDetails(weather: WeatherDetails)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertForecasts(forecasts: List<WeatherForecast>)
+    @Insert
+    suspend fun insertNotification(notification: Notification)
     // delete
     @Query("Delete from weather_details where isFav = 0")
     suspend fun deleteHomeWeatherDetails()
@@ -36,6 +41,8 @@ interface WeatherDao {
     suspend fun deleteFavoriteCityWeather(cityId: Int)
     @Query("Delete from weather_forecast where cityId = :cityId")
     suspend fun deleteFavoriteCityForecasts(cityId: Int)
+    @Query("Delete from notifications where time = :time")
+    suspend fun deleteNotification(time: Long)
 
     @Transaction
     suspend fun updateHome(weather: WeatherDetails, forecasts: List<WeatherForecast>) {

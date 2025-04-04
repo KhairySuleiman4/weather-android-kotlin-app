@@ -34,4 +34,11 @@
     <string name="favorite_cities">Favorite Cities</string>
     <string name="title_activity_favorite_details" translatable="false">FavoriteDetails</string>
     <string name="connect_to_internet">Connect to Internet to Enable this Feature</string>
+    <string name="notifications_screen">Your Notifications</string>
+    <string name="add_a_notification">Add a new Notification</string>
+    <string name="add_city">Add a new City</string>
+    <string name="select_date">Select a Date in the Future</string>
+    <string name="select_time">Select Time in the Future</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

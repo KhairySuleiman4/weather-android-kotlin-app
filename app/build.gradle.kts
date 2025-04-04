@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -112,4 +113,6 @@ dependencies {
     //MockK
     testImplementation("io.mockk:mockk-android:1.13.17")
     testImplementation("io.mockk:mockk-agent:1.13.17")
+    // Work Manager
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 }
