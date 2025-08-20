@@ -1,6 +1,5 @@
 package com.example.weatherapp.model.remote
 
-import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.model.pojos.response.forecast.ForecastResponse
 import com.example.weatherapp.model.pojos.response.weather.WeatherResponse
 import retrofit2.Response
@@ -11,14 +10,12 @@ interface APIServices {
     @GET("weather")
     suspend fun getWeatherDetails(
         @Query("lat") lat: Double,
-        @Query("lon") long: Double,
-        @Query("appid") apiKey: String = BuildConfig.WEATHER_API_KEY
+        @Query("lon") long: Double
     ): Response<WeatherResponse>
 
     @GET("forecast")
     suspend fun getForecastDetails(
         @Query("lat") lat: Double,
-        @Query("lon") long: Double,
-        @Query("appid") apiKey: String = BuildConfig.WEATHER_API_KEY
+        @Query("lon") long: Double
     ): Response<ForecastResponse>
 }

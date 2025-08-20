@@ -8,7 +8,7 @@ import com.example.weatherapp.model.pojos.local.Notification
 import com.example.weatherapp.model.pojos.local.forecast.WeatherForecast
 import com.example.weatherapp.model.pojos.local.weather.WeatherDetails
 
-@Database(entities = [WeatherDetails::class, WeatherForecast::class, Notification::class], version = 4)
+@Database(entities = [WeatherDetails::class, WeatherForecast::class, Notification::class], version = 4, exportSchema = false)
 abstract class WeatherDatabase: RoomDatabase() {
     abstract fun weatherDao(): WeatherDao
 

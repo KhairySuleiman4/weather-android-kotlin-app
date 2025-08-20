@@ -75,8 +75,9 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
     // Retrofit
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.14")
     // Room db
     implementation(libs.androidx.room.runtime)
     // Kotlin Symbol Processing (KSP)

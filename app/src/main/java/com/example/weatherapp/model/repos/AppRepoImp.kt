@@ -13,11 +13,11 @@ class AppRepoImp(
     private val locationRepo: LocationRepoImp,
     private val weatherRepo: WeatherRepoImp,
     private val forecastRepo: ForecastsRepoImp
-): AppRepo {
+) : AppRepo {
     val lat = locationRepo.lat
     val long = locationRepo.long
 
-    companion object{
+    companion object {
         @Volatile
         private var instance: AppRepoImp? = null
 
@@ -35,7 +35,8 @@ class AppRepoImp(
                                 settingsRepo,
                                 locationRepo,
                                 weatherRepo,
-                                forecastRepo)
+                                forecastRepo
+                            )
                     }
                 }
             }
@@ -65,51 +66,51 @@ class AppRepoImp(
 
     override fun getAllFavoriteWeatherDetails() = weatherRepo.getAllFavoriteWeatherDetails()
 
-    override fun getFavoriteWeatherDetails(cityId: Int) = weatherRepo.getFavoriteWeatherDetails(cityId)
+    override fun getFavoriteWeatherDetails(cityId: Int) =
+        weatherRepo.getFavoriteWeatherDetails(cityId)
 
     override fun getFavoriteForecasts(cityId: Int) = forecastRepo.getFavoriteForecasts(cityId)
 
     override fun getAllNotifications() = forecastRepo.getAllNotifications()
 
-    override suspend fun getWeatherDetails(lat: Double, long: Double) = weatherRepo.getWeatherDetails(lat, long)
+    override suspend fun getWeatherDetails(lat: Double, long: Double) =
+        weatherRepo.getWeatherDetails(lat, long)
 
-    override suspend fun getForecastDetails(lat: Double, long: Double) = forecastRepo.getForecastDetails(lat, long)
+    override suspend fun getForecastDetails(lat: Double, long: Double) =
+        forecastRepo.getForecastDetails(lat, long)
 
     override suspend fun writeLanguageChoice(lang: String) = settingsRepo.writeLanguageChoice(lang)
 
-    override suspend fun writeTemperatureUnit(temp: String) = settingsRepo.writeTemperatureUnit(temp)
+    override suspend fun writeTemperatureUnit(temp: String) =
+        settingsRepo.writeTemperatureUnit(temp)
 
-    override suspend fun writeLocationChoice(location: String) = settingsRepo.writeLocationChoice(location)
+    override suspend fun writeLocationChoice(location: String) =
+        settingsRepo.writeLocationChoice(location)
 
     override suspend fun writeWindSpeedUnit(wind: String) = settingsRepo.writeWindSpeedUnit(wind)
 
-    override suspend fun writeLatLong(lat: Double, long: Double) = settingsRepo.writeLatLong(lat, long)
+    override suspend fun writeLatLong(lat: Double, long: Double) =
+        settingsRepo.writeLatLong(lat, long)
 
-    override suspend fun updateHome(weatherDetails: WeatherDetails, forecasts: List<WeatherForecast>) {
-        weatherRepo.updateHome(weatherDetails, forecasts)
-    }
+    override suspend fun updateHome(
+        weatherDetails: WeatherDetails,
+        forecasts: List<WeatherForecast>
+    ) = weatherRepo.updateHome(weatherDetails, forecasts)
 
-    override suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails) {
+    override suspend fun insertWeatherDetailsToDatabase(weatherDetails: WeatherDetails) =
         weatherRepo.insertWeatherDetailsToDatabase(weatherDetails)
-    }
 
-    override suspend fun insertForecastsToDatabase(forecasts: List<WeatherForecast>) {
+    override suspend fun insertForecastsToDatabase(forecasts: List<WeatherForecast>) =
         forecastRepo.insertForecastsToDatabase(forecasts)
-    }
 
-    override suspend fun insertNotification(notification: Notification) {
+    override suspend fun insertNotification(notification: Notification) =
         forecastRepo.insertNotification(notification)
-    }
 
-    override suspend fun deleteFavoriteCityWeather(cityId: Int) {
+    override suspend fun deleteFavoriteCityWeather(cityId: Int) =
         weatherRepo.deleteFavoriteCityWeather(cityId)
-    }
 
-    override suspend fun deleteFavoriteCityForecasts(cityId: Int) {
+    override suspend fun deleteFavoriteCityForecasts(cityId: Int) =
         forecastRepo.deleteFavoriteCityForecasts(cityId)
-    }
 
-    override suspend fun deleteNotification(time: Long) {
-        forecastRepo.deleteNotification(time)
-    }
+    override suspend fun deleteNotification(time: Long) = forecastRepo.deleteNotification(time)
 }
